@@ -1,0 +1,212 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-100 lucky">
+            <div class="main-content b_accent">
+
+
+                <div class="active-campaigns">
+                    <div class="active-campaigns mat-card b_persist">
+                        <div class="heading"> <b> Store Campaigns </b>
+                            <a class="ml-auto view-details c_primary" (click)="createNew()">Create Campaign</a> </div>
+                        <hr>
+
+
+
+                        <ng-container *ngIf="campaign$ | async  as campaign">
+                            <div class="d-flex-row-md  d-flex-column-sm flex-wrap">
+
+
+                                <div class="col-50 col-md-100 col-sm-100" *ngFor="let x of campaign">
+                                    <div class="campaign-item c_black">
+                                        <div class="d-flex-column">
+                                            <div class="d-flex-row mt-md-10 mt-sm-5">
+
+                                                <!--p class="camp_title">{{x.name}} 
+                                      <span class="status c_white b_black" *ngIf="x.tX == 'tC' && !x.customAct">{{!x.ban ? 'Pending':'Rejected'}}</span>
+                                      <span class="status c_white" *ngIf=" x.tX !== 'tC' || x.tX == 'tC' && x.customAct "
+                                  [class.b_green]=" auth.resource.compareDates( x.dateE.toDate() ) " 
+                                  [class.b_red]=" x.stoped || x.paused || !auth.resource.compareDates( x.dateE.toDate() ) ">
+                                  {{ !auth.resource.compareDates( x.dateE.toDate() ) ? 'Expired':''}}
+                                  {{ !x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Active':''}}
+                                  {{ x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Stopped':''}}
+                                  {{ !x.stoped && x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Paused':''}}</span></p-->
+
+                                                <h3 class="mr-5 col-70 col-sm-60">
+                                                    <b> {{x.name}} </b>
+                                                    <button mat-button class="active-chip c_white b_black" *ngIf="x.tX == 'tC' && !x.customAct">{{!x.ban ? 'Pending':'Rejected'}}</button>
+                                                    <button class="active-chip c_white" [class.b_green]=" auth.resource.compareDates( x.dateE.toDate() ) " [class.b_red]=" x.stoped || x.paused || !auth.resource.compareDates( x.dateE.toDate() ) " mat-button *ngIf=" x.tX !== 'tC' || x.tX == 'tC' && x.customAct ">
+                                  {{ !auth.resource.compareDates( x.dateE.toDate() ) ? 'Expired':''}}
+                                  {{ !x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Active':''}}
+                                  {{ x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Stopped':''}}
+                                  {{ !x.stoped && x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Paused':''}}</button>
+                                                </h3>
+                                                <div class="col-5 col-sm-5"> </div>
+                                                <button class="quick-chip col-25 col-sm-35 b_white" mat-button (click)="sendSMS()"><img src="assets/foreign/lucky/send.svg" alt=""> Quick Send</button>
+                                            </div>
+                                            <div class="dash-border align-items-center d-flex-row">
+                                                <div class="col-65  col-sm-50">
+                                                    <h5> <b> On Direct Sale</b>
+                                                    </h5>
+                                                    <div> <img src="assets/foreign/lucky/percent.svg" alt="" width="15" height="15"> <span> You give:
+                                      {{ x.type == 'flat' ? '₹':''}}{{x.cbDir}}{{ x.type == 'percent' ? '%':''}}</span></div>
+                                                    <div class="mt-5"></div>
+                                                    <h5> <b>Sale Via Recommendation </b> </h5>
+                                                    <div> <img src="assets/foreign/lucky/customerpinknew.svg" alt="">
+                                                        <span> New Customer : {{ x.type == 'flat' ? '₹':''}}{{x.cbNew}}{{ x.type == 'percent' ? '%':''}}</span>
+                                                    </div>
+                                                    <div class="mt-3"> <img src="assets/foreign/lucky/customerpink.svg" alt="">
+                                                        <span> Existing Customer : {{ x.type == 'flat' ? '₹':''}}{{x.cbExi}}{{ x.type == 'percent' ? '%':''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-35  col-sm-50">
+                                                    <div class="padding-grd ">
+                                                        <div class="bg-gradient b_gradient c_white">
+                                                            <h6 *ngIf="x.type == 'flat'">Cashback ₹{{x.cbDir}}/-</h6>
+                                                            <h6 *ngIf="x.type == 'percent'">{{x.cbDir}}% Cashback upto ₹{{x.max}}/-</h6>
+                                                            <h6>Minimum order value ₹{{x.min}}/-</h6>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="d-flex-row mt-5">
+                                                <div class="col-50">
+                                                    <p> Expiry Date <br> <b> {{x.dateE.toDate() | date:'MMM dd, yyyy'}} </b> </p>
+                                                </div>
+                                                <div class="col-50">
+                                                    <button class="copy-chip float-right b_white" mat-button><img src="assets/foreign/lucky/copy.svg" class="mx-3" alt=""> Copy to Clipboard</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p *ngIf="campaign.length == 0"><br>You have no recent orders.</p>
+
+                            </div>
+                        </ng-container>
+
+
+                        <app-content *ngIf="!(campaign$ | async)"></app-content>
+
+
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--
+
+    <div class="row campaignRow" *ngIf="auth.user$ | async as mine">
+
+
+        <div class="col col-100 col-card">
+            <div class="card-box">
+                <div class="boxHeader">
+                    <h4>Store Campaigns</h4>
+                    <span class="divide"></span>
+                    <button mat-button color="primary" (click)="createNew()">Create Campaign</button>
+                </div>
+<div style=" margin: 0 -8px -8px -8px; min-height: 252px;">
+
+<ng-container *ngIf="campaign$ | async as campaign">
+
+                <div class="campaign c_white" 
+                [class.campaign_active]="auth.resource.compareDates( x.dateE.toDate() )"
+                [class.campaign_paused]="x.paused"
+                [class.campaign_refill]=" (x.cbNew + x.cbExi) > mine.acBalH "
+                [class.campaign_expired]="x.stoped || !auth.resource.compareDates( x.dateE.toDate() )"
+                *ngFor="let x of campaign">
+                <div class="campaign_hold">
+                    < !--img *ngIf="themeService.colorScheme == 'dark'" [src]=" auth.resource.env.avatarW " alt="Profile Picture White">
+                    <img *ngIf="themeService.colorScheme == 'light'" [src]="  auth.resource.env.avatarB " alt="Profile Picture Black"-- >
+                    <div class="campaign_info">
+                        <div class="campaign_head">
+                            <p class="camp_title">{{x.name}} 
+                                <span class="status c_white b_black" *ngIf="x.tX == 'tC' && !x.customAct">{{!x.ban ? 'Pending':'Rejected'}}</span>
+                                <span class="status c_white" *ngIf=" x.tX !== 'tC' || x.tX == 'tC' && x.customAct "
+                            [class.b_green]=" auth.resource.compareDates( x.dateE.toDate() ) " 
+                            [class.b_red]=" x.stoped || x.paused || !auth.resource.compareDates( x.dateE.toDate() ) ">
+                            {{ !auth.resource.compareDates( x.dateE.toDate() ) ? 'Expired':''}}
+                            {{ !x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Active':''}}
+                            {{ x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Stopped':''}}
+                            {{ !x.stoped && x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Paused':''}}</span></p>
+                            <span class="divide"></span>
+                            < !--button mat-stroked-button color="warn">Quick Send</button-- >
+                            <a mat-icon-button matTooltipPosition="before"
+                            matTooltip="Share"><mat-icon>share</mat-icon></a>
+                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                            matTooltip="More"><mat-icon>more_vert</mat-icon></button>
+                            <mat-menu #menu="matMenu" xPosition="before" overlapTrigger="true">
+                              <button mat-menu-item><mat-icon>mark_email_unread</mat-icon> Quick Send</button>
+                              <button mat-menu-item><mat-icon>share</mat-icon> Share</button>
+                              <button mat-menu-item><mat-icon>motion_photos_paused</mat-icon> Pause</button>
+                              <button mat-menu-item><mat-icon>motion_photos_on</mat-icon> Resume</button>
+                              <button mat-menu-item><mat-icon>motion_photos_off</mat-icon> Stop</button>
+                            </mat-menu>
+                        </div>
+                        <p>₹ {{x.cbNew + x.cbExi}} Cashback <span class="ends">ends {{x.dateE.toDate() | date:'dd MMM, hh:mm a'}}</span></p>
+                        <table>
+                            <tr>
+                                <td>- Direct sale (on min order ₹ {{x.min}})</td>
+                                <td class="textR">₹ {{x.cbDir}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Sale via Recommendation</td>
+                            </tr>
+                            <tr>
+                                <td>- Existing customer</td>
+                                <td class="textR">₹ {{x.cbExi}}</td>
+                            </tr>
+                            <tr>
+                                <td>- New customer</td>
+                                <td class="textR">₹ {{x.cbNew}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                < !--div class="mobileInput">
+                    <input class="b_white c_black col-none col-sm-show"
+                    [value]=" 'https://refr.club/v1/' + x.id" readonly />
+                </div-- >
+                <div class="sharing">
+                    <button mat-icon-button
+                    matTooltip="Shared"><mat-icon>share</mat-icon> {{x.countS || 0}}+</button>
+                    &nbsp;
+                    <button mat-icon-button
+                    matTooltip="Earned"><mat-icon>trending_up</mat-icon> ₹ {{x.countP || 0}}</button>
+                    &nbsp;
+                    <button mat-icon-button
+                    matTooltip="Spent"><mat-icon>trending_down</mat-icon> ₹ {{x.countM || 0}}</button>
+                    <span class="divide"></span>
+                    <input class="c_white"
+                    [value]=" 'https://refr.club/v1/' + x.id " readonly />
+                    <button mat-icon-button (click)="auth.resource.copyClipboard( 'https://refr.club/v1/' + x.id )"
+                    matTooltip="Copy URL"><mat-icon>copy_all</mat-icon></button>
+                </div>
+                </div>
+
+<p *ngIf="campaign.length == 0">You have no active campaigns</p>
+</ng-container>
+                <app-content *ngIf="!(campaign$ | async)"></app-content>
+
+</div>
+            </div>
+        </div>
+
+
+
+        <div class="col col-100">
+            <h1 class="c_persist">Refr</h1>
+        </div>
+    </div>
+
+-->
+</div>

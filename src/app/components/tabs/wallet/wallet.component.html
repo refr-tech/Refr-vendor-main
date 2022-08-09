@@ -1,0 +1,159 @@
+<div class="container" *ngIf="auth.user$ | async as mine">
+    <div class="row balanceCard">
+        <div class="col col-100 textC" style="margin-bottom: 0px;">
+            <div style="display: flex; margin: 0 auto;
+            min-width: 340px;
+            width: -webkit-fill-available;
+            max-width: 420px;">
+                <button mat-flat-button color="primary" [matMenuTriggerFor]="menuQR"><mat-icon>qr_code</mat-icon> Get QR</button>
+                <span class="divide"></span>
+                <button mat-flat-button color="primary" [matMenuTriggerFor]="menuLocate"><mat-icon>published_with_changes</mat-icon> Choose Site (All)</button>
+            </div>
+            <mat-menu #menuQR="matMenu" xPosition="after" overlapTrigger="false">
+                <button mat-menu-item (click)="download('svg')"><mat-icon>download</mat-icon> Download QR</button>
+                <button mat-menu-item><mat-icon>shopping_cart</mat-icon> Buy Standee</button>
+                <button mat-menu-item><mat-icon>shopping_cart</mat-icon> Buy Tent</button>
+                <button mat-menu-item><mat-icon>shopping_cart</mat-icon> Buy Delivery Card</button>
+                <button mat-menu-item><mat-icon>shopping_cart</mat-icon> Buy Stickers</button>
+            </mat-menu>
+            <mat-menu #menuLocate="matMenu" xPosition="before" overlapTrigger="false">
+                <button mat-menu-item><mat-icon>{{false ? 'check_box_outline_blank':'check_box_outline'}}</mat-icon> All Store Locations</button>
+                <button mat-menu-item *ngFor="let l of mine.storeLoc; let i = index;"><mat-icon>check_box_outline_blank</mat-icon> Location {{i + 1}}<!--{{l}}--></button>
+            </mat-menu>
+            <!--button mat-flat-button color="primary"><mat-icon>shopping_cart</mat-icon> Get Merchandise</button-->
+            <!--button mat-flat-button color="primary">Tent@39</button>
+            &nbsp;
+            <button mat-flat-button color="primary">Standee@99</button-->
+        </div>
+
+        <div class="col col-100 textC col-card">
+            <div class="payCard card-box b_gradient c_white">
+                <table>
+                    <tr>
+                        <td>Scan to Share</td>
+                        <td class="moneyTitle">Store Account</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><span class="scanPad">
+                            <div #canvasX id="canvasX"></div>
+                        </span></td>
+                        <td>
+                            <h3>₹ {{mine.acBalV| number:'1.2-2'}}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="moneyTitle">Campaign Wallet</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h3>₹ {{mine.acBalH| number:'1.2-2'}}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{mine.name}}</p>
+                        </td>
+                        <td>
+                            <p class="moneyTitle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="f_white">
+                            <path d="M15.1,19.37l1,1.74c-0.96,0.44-2.01,0.73-3.1,0.84v-2.02C13.74,19.84,14.44,19.65,15.1,19.37z M4.07,13H2.05 c0.11,1.1,0.4,2.14,0.84,3.1l1.74-1C4.35,14.44,4.16,13.74,4.07,13z M15.1,4.63l1-1.74C15.14,2.45,14.1,2.16,13,2.05v2.02 C13.74,4.16,14.44,4.35,15.1,4.63z M19.93,11h2.02c-0.11-1.1-0.4-2.14-0.84-3.1l-1.74,1C19.65,9.56,19.84,10.26,19.93,11z M8.9,19.37l-1,1.74c0.96,0.44,2.01,0.73,3.1,0.84v-2.02C10.26,19.84,9.56,19.65,8.9,19.37z M11,4.07V2.05 c-1.1,0.11-2.14,0.4-3.1,0.84l1,1.74C9.56,4.35,10.26,4.16,11,4.07z M18.36,7.17l1.74-1.01c-0.63-0.87-1.4-1.64-2.27-2.27 l-1.01,1.74C17.41,6.08,17.92,6.59,18.36,7.17z M4.63,8.9l-1.74-1C2.45,8.86,2.16,9.9,2.05,11h2.02C4.16,10.26,4.35,9.56,4.63,8.9z M19.93,13c-0.09,0.74-0.28,1.44-0.56,2.1l1.74,1c0.44-0.96,0.73-2.01,0.84-3.1H19.93z M16.83,18.36l1.01,1.74 c0.87-0.63,1.64-1.4,2.27-2.27l-1.74-1.01C17.92,17.41,17.41,17.92,16.83,18.36z M7.17,5.64L6.17,3.89 C5.29,4.53,4.53,5.29,3.9,6.17l1.74,1.01C6.08,6.59,6.59,6.08,7.17,5.64z M5.64,16.83L3.9,17.83c0.63,0.87,1.4,1.64,2.27,2.27 l1.01-1.74C6.59,17.92,6.08,17.41,5.64,16.83z M13,7h-2v5.41l4.29,4.29l1.41-1.41L13,11.59V7z"/>
+                        </svg> Pending ₹ {{mine.acBalVr| number:'1.2-2'}}
+                                <!-- & {{mine.acBalP}} Refr Points-->
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--div class="col col-100 textC">
+   
+<div class="content" role="main">
+  <h2>{{title}}</h2>
+  <p>qrCode: {{qrCode}}</p>
+  
+  <label>
+    <input (keyup)="onKey($event)" value={{this.data}}>
+    <select (change)="onChange($event)" value={{this.extension}}>
+      <option value="svg">SVG</option>
+      <option value="png">PNG</option>
+      <option value="jpeg">JPEG</option>
+      <option value="webp">WEBP</option>
+    </select>
+    <button (click)="download()">Download</button>
+  </label>
+</div>
+
+        </div-->
+        <div class="col col-100 textC">
+            <button mat-raised-button (click)="addMoney()">Add Money</button> &nbsp;
+            <button mat-raised-button (click)="addMoneyCustom()">Add Money</button> &nbsp;
+            <button mat-raised-button (click)="addTransfer()">Transfer</button> &nbsp;
+            <button mat-raised-button (click)="addWithdraw()">Withdraw</button>
+        </div>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col col-100 col-card">
+            <!--div class="shape c_persist"></div-->
+            <div class="card-box transactions textC">
+                <div class="boxHeader">
+                    <h4>Store Transactions</h4>
+                    <span class="divide"></span>
+                    <button mat-button>All<mat-icon>sort</mat-icon></button>
+                </div>
+
+                <!--div style="display: flex;">
+                    <h4>Transactions for location</h4>
+                    <span class="divide"></span>
+                    <button mat-button>Support<mat-icon>help</mat-icon></button>
+                </div-->
+                <div class="transactionList" *ngIf="payments$ | async as payments">
+                    <!--p style="padding: 0 !important;
+                    margin: 0 !important;
+                    font-size: 12px !important;" *ngFor="let x of payments">{{x | json}}<br><br></p-->
+
+                    <button mat-button class="transaction" *ngFor="let x of payments">
+                        <div class="b_persist textL transactionWraper">
+                            <p><span style="font-size: 12px;">{{x.sin?.toDate()|date:'dd, MMM, hh:mm'}}
+                                <span *ngIf="x.to == 'Δ'">Campaign Refill</span>
+                                <span *ngIf="x.journey == 'F2F'">F2F</span>
+                                <span *ngIf="x.journey == 'BURN'">BURN</span>
+                                <span *ngIf="x.journey == 'POS'">POS</span>
+                                <span *ngIf="x.journey == 'DIRECT'">Direct sale</span>
+                                <span *ngIf="false">Existing customer</span>
+                                <span *ngIf="false">New customer</span>
+                            </span><br>
+                                <img *ngIf="x.to == 'Δ'" src="assets/other/locate.svg" alt="Profile Picture">
+                                <img *ngIf="x.journey == 'POS' && themeService.colorScheme == 'dark' || x.journey == 'F2F' && themeService.colorScheme == 'dark' || x.journey == 'BURN' && themeService.colorScheme == 'dark' || x.journey == 'DIRECT' && themeService.colorScheme == 'dark' " [src]=" auth.resource.env.avatarW " alt="Profile Picture White">
+                                <img *ngIf="x.journey == 'POS' && themeService.colorScheme == 'light' || x.journey == 'F2F' && themeService.colorScheme == 'light' || x.journey == 'BURN' && themeService.colorScheme == 'light' || x.journey == 'DIRECT' && themeService.colorScheme == 'light'  " [src]="  auth.resource.env.avatarB " alt="Profile Picture Black">
+                                &nbsp;
+                                <span *ngIf="x.to == 'Δ' && false">Store Account</span>
+                                <span *ngIf="x.to == 'Δ' && false">XXX</span>
+                                <span *ngIf="x.to == 'Δ' && true">Refr Tech</span>
+                                <span *ngIf="false">Name</span>
+                                <span *ngIf="x.journey == 'POS' || x.journey == 'F2F' || x.journey == 'DIRECT' || x.journey == 'BURN'">{{x.userName}}</span>
+                                &nbsp;
+                                <span *ngIf="!x.status || x.status == 0" class="b_warn c_white" style="padding: 0 8px;" >Failed</span>
+                            </p>
+                            <span class="divide"></span>
+                            <p class="textR">
+                                <span class="c_red" *ngIf="x.journey == 'POS'">- ₹ {{x.earn|number:'1.2-2'}}</span>
+                                <span class="c_red" *ngIf="x.journey == 'F2F'">- ₹ {{x.earnTotal|number:'1.2-2'}}</span>
+                                <br>
+                                <span class="c_green" *ngIf="x.to == 'Δ' || x.journey == 'POS' || x.journey == 'F2F' || x.journey == 'BURN' || x.journey == 'DIRECT' ">₹ {{x.amTotal|number:'1.2-2'}}</span>
+                            </p>
+                        </div>
+                    </button>
+                    <p class="textL" *ngIf="payments.length == 0">You have no transactions</p>
+                </div>
+
+                <app-content *ngIf="!(payments$ | async)"></app-content>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

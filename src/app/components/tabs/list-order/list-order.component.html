@@ -1,0 +1,121 @@
+<div class="container">
+    <div class="row dashboard" *ngIf="auth.user$ | async as mine">
+
+
+        <div class="col col-100 col-card">
+            <div class="card-box">
+                <div class="boxHeader">
+                <h4>List of Orders</h4>
+                </div>
+               
+<mat-tab-group mat-align-tabs="end" class="rightTabs">
+  <mat-tab label="Online">
+      
+<div style="min-height: 290px; margin: 8px 0 0 0; overflow-y: scroll;">
+        <ng-container *ngIf="payments$ | async as payments">
+    <table class="orderTable">
+        <tr class="c_primary" *ngIf="payments.length !== 0">
+            <th>#</th>
+            <th class="textC">Cashback</th>
+            <th class="textC">Cart</th>
+            <th class="textC">Status</th>
+        </tr>
+
+        <ng-container *ngFor="let x of payments">
+        <tr><td colspan="4"><hr class="c_accent"></td></tr>
+        <tr>
+            <td>A{{x.idORDR|number:'3.0'}}</td>
+            <td class="textC"><span class="c_red cashback">₹ {{x.amCashback.rCash|number:'1.2-2'}}</span></td>
+            <td rowspan="2" class="textC">
+                <a mat-icon-button ><mat-icon>shopping_cart</mat-icon><sub>{{x.cart.length}}</sub></a>
+            </td>
+            <td class="textC"><span class="c_green cashback">₹ {{x.amTotal|number:'1.2-2'}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="orderAbout">
+                <img *ngIf="themeService.colorScheme == 'dark'" [src]=" auth.resource.env.avatarW " alt="Profile Picture White">
+                <img *ngIf="themeService.colorScheme == 'light'" [src]="  auth.resource.env.avatarB " alt="Profile Picture Black"> {{x.userData.name}}</td>
+            <td rowspan="2" class="textC">
+                <button mat-stroked-button 
+                [class.c_warn]="true"
+                [class.c_red]="false"
+                [class.c_green]="false"
+                [class.c_primary]="false">pending</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="orderAbout"><span class="date">{{x.sin.toDate()|date:'dd, MMM, hh:mm'}}</span> &nbsp; {{x.userData.phone}} &nbsp; {{x.userData.email}}</td>
+        </tr>
+        </ng-container>
+
+        <tr *ngIf="payments.length == 0">
+            <td colspan="3" style="border: none;
+            padding: 0;"><p>You have no online orders</p></td>
+        </tr>
+    </table>
+        </ng-container>
+
+    <app-content *ngIf="!(payments$ | async)"></app-content>
+</div>
+    
+  </mat-tab>
+  <mat-tab label="Offline">
+
+<div style="min-height: 290px; margin: 8px 0 0 0; overflow-y: scroll;">
+        <ng-container *ngIf="payments$ | async as payments">
+    <table class="orderTable">
+        <tr class="c_primary" *ngIf="payments.length !== 0">
+            <th>#</th>
+            <th>Cashback</th>
+            <!--th class="textC">Cart</th-->
+            <th class="textC">Status</th>
+        </tr>
+
+        <ng-container *ngFor="let x of payments">
+        <tr><td colspan="4"><hr class="c_accent"></td></tr>
+        <tr>
+            <td>A{{x.idORDR|number:'3.0'}}</td>
+            <td><span class="c_red cashback">₹ {{x.amCashback.rCash|number:'1.2-2'}}</span></td>
+            <!--td rowspan="2" class="textC">
+                <a mat-icon-button ><mat-icon>shopping_cart</mat-icon><sub>10</sub></a>
+            </td-->
+            <td class="textC"><span class="c_green cashback">₹ {{x.amTotal|number:'1.2-2'}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="orderAbout">
+                <img *ngIf="themeService.colorScheme == 'dark'" [src]=" auth.resource.env.avatarW " alt="Profile Picture White">
+                <img *ngIf="themeService.colorScheme == 'light'" [src]="  auth.resource.env.avatarB " alt="Profile Picture Black"> Dipesh Bhoir</td>
+            <td rowspan="2" class="textC">
+                <button mat-stroked-button 
+                [class.c_warn]="false"
+                [class.c_red]="false"
+                [class.c_green]="false"
+                [class.c_primary]="true">Complete</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="orderAbout"><span class="date">{{x.sin.toDate()|date:'dd, MMM, hh:mm'}}</span> &nbsp; +919876543210 &nbsp; dipeshbhoir@hotmail.com</td>
+        </tr>
+        </ng-container>
+
+        <tr *ngIf="payments.length == 0">
+            <td colspan="3" style="border: none;
+            padding: 0;"><p>You have no offline orders</p></td>
+        </tr>
+    </table>
+        </ng-container>
+
+    <app-content *ngIf="!(payments$ | async)"></app-content>
+</div>
+    
+  </mat-tab>
+</mat-tab-group>
+            </div>
+        </div>
+
+
+        <div class="col col-100">
+            <h1 class="c_persist">Refr</h1>
+        </div>
+    </div>
+</div>

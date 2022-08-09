@@ -1,0 +1,692 @@
+<div class="container" *ngIf="auth.user$ | async as mine">
+    <div class="row">
+        <div class="col col-100 textC" *ngIf="!(store$ | async)">Loading...</div>
+
+
+        <div class="col col-100 lucky" style="margin-top: 0;" *ngIf="store$ | async as store">
+
+
+            <div class="main-content b_accent">
+
+
+
+                <div class="profile d-flex-row">
+                    <div class="mr-5">
+                        <img style="width: 38px;
+                        vertical-align: middle;
+                        display: inline-block;
+                        border-radius: 4px;" [src]=" store.logo || 'assets/foreign/lucky/dp.png' " alt="">
+                    </div>
+                    <div style=" display: flex;
+                  align-items: center;">
+                        <h4>{{store.name}} <br> <span> {{store.type}} </span> </h4>
+                    </div>
+                </div>
+                <div class="statistics d-flex-row">
+                    <div class="d-flex-column col-50 mr-10">
+                        <div class="col-100 mb-5">
+                            <div class="card-purple card mat-card c_black">
+                                <div class="d-flex-row mr-md-15 mr-sm-10 align-items-center">
+                                    <div class="col-10  col-sm-20 mr-5">
+                                        <button mat-flat-button class="icon-button"><img width="45%" src="assets/foreign/lucky/sideicons/heart.png"
+                                alt=""> </button>
+                                    </div>
+                                    <div class="col-90  col-sm-80">
+                                        <span>Your Customers</span><br>
+                                        <b>{{store.vFan}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-100">
+                            <div class="card-green card mat-card c_black">
+                                <div class="d-flex-row mr-md-15 mr-sm-10 align-items-center">
+                                    <div class="col-10  col-sm-20 mr-10">
+                                        <button mat-flat-button class="icon-button"><img width="45%" src="assets/foreign/lucky/sideicons/orders.png"
+                                alt=""> </button>
+                                    </div>
+                                    <div class="col-90  col-sm-80">
+                                        <span>Orders</span><br>
+                                        <b>{{store.vOrdr}}</b>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-50">
+                        <div class="card-white card mat-card c_black">
+                            <div class="d-flex-column ">
+                                <div class="d-flex-row mr-md-15 mr-sm-10 align-items-center">
+                                    <div class="col-10  col-sm-20 mr-md-25 mr-sm-10">
+                                        <button mat-flat-button class="icon-button"><img width="45%" src="assets/foreign/lucky/sideicons/dollar.png"
+                                alt=""> </button>
+                                    </div>
+                                    <div class="col-90  col-sm-80 ">
+                                        <span>Your Earnings</span><br>
+                                        <b>{{store.vEarn}}</b>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex-row align-items-center mt-md-25 mt-sm-25">
+                                    <div class="col-10  col-sm-20  mr-md-25 mr-sm-10">
+                                        <button mat-flat-button class="icon-button"><img width="45%" src="assets/foreign/lucky/sideicons/campaigns.png"
+                                alt=""> </button>
+                                    </div>
+                                    <br>
+                                    <div class="col-90  col-sm-80 mr-5">
+                                        <span>Campaign Wallet</span> <br>
+                                        <b>{{mine.acBalH}}</b>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="step d-flex-row">
+                    <div class="col-100" (click)="goLink( stepper.selectedIndex)">
+                        <mat-stepper [linear]="false" labelPosition="bottom" #stepper [selectedIndex]="selectedIndex" [disableRipple]="true" class="b_persist">
+                            <mat-step [editable]="selectedIndex == 0" [completed]="selectedIndex > 0" label="Create Store"></mat-step>
+                            <mat-step [editable]="selectedIndex == 1" [completed]="selectedIndex > 1" label="Create Campaign"></mat-step>
+                            <mat-step [editable]="selectedIndex == 2" [completed]="selectedIndex > 2" label="Add Funds"></mat-step>
+                            <mat-step [editable]="selectedIndex == 3" [completed]="selectedIndex > 3" label="Add Products"></mat-step>
+                        </mat-stepper>
+                    </div>
+
+                    <div>
+
+                    </div>
+                </div>
+                <br>
+
+
+
+
+
+
+                <div class="redeem-card">
+                    <div class="redeem-card mat-card b_persist">
+                        <div class="heading"> <b> Redeem Requests </b> <span class="ml-auto view-details">
+                        <div class="badge c_white" *ngIf="paymentRedeem$ | async as paymentRedeem">{{paymentRedeem.length || 0}}</div>
+                      </span>
+                        </div>
+                        <hr>
+
+
+                        <ng-container *ngIf="paymentRedeem$ | async as paymentRedeem">
+                            <ng-container *ngIf="campaign$ | async as campaigns">
+
+                                <div class="d-flex-column d-md-none d-sm-block">
+
+                                    <div class="redeem-item" *ngFor="let x of paymentRedeem">
+                                        <div class="d-flex-row">
+
+                                            <div class="col-70">
+                                                <h5>{{x.userName || "No Name"}}</h5>
+                                                <input class="bill-card" #amt type="number" [value]="" placeholder="Enter Bill amount" [disabled]="makeChanges" required>
+                                                <div style="margin: 4px 0;">
+
+                                                    <select [(ngModel)]="campaign" class="bill-card" [class.col-none]="x.journey !== 'POS'" style="width: auto;" name="camps" [disabled]="makeChanges" required>
+                                                <option value="">No Campaign</option>
+                                                <ng-container *ngFor="let c of campaigns">
+                                                    <option [value]="c.id">{{c.name}}</option>
+                                                </ng-container>
+                                          </select>
+                                                </div>
+
+
+                                                <ng-container *ngIf="showDetailsRedeem.includes(x.id)">
+                                                    <p *ngIf="x.sin">{{ x.sin.toDate() | date:'MMM, dd, yyyy hh:mm' }}</p>
+
+                                                    <p *ngIf="x.journey == 'POS' && campaign">Instant Cashback : {{ getCampAmt( campaign, "cbDir") }}</p>
+                                                    <p *ngIf="x.journey == 'POS' && campaign">Min Order Value : {{ getCampAmt( campaign, "min") }} </p>
+                                                    <p *ngIf="x.journey == 'POS' && campaign && x.type == 'percent' ">Maximum Cashback : {{ getCampAmt( campaign, "max") }} </p>
+                                                    <p *ngIf="x.journey == 'F2F'">Instant Cashback : {{x.camp.cbNew}}</p>
+                                                    <p *ngIf="x.journey == 'F2F'">Min Order Value : {{x.camp.min}}</p>
+                                                    <p *ngIf="x.journey == 'F2F' && x.type == 'percent'">Maximum Cashback : {{x.camp.max}}</p>
+                                                </ng-container>
+                                            </div>
+
+                                            <div class="col-30">
+                                                <div class="d-flex-row justify-content-end align-items-start">
+                                                    <img class="col-20" width="50%" [src]="
+                                                    ( x.journey == 'POS' ? 'assets/foreign/lucky/personicon2.svg':'') +
+                                                    ( x.journey == 'F2F' ? 'assets/foreign/lucky/personicon.svg':'')
+                                                    " alt="">
+                                                    <button class=" down-arrow" (click)="expandRedeemCard(x.id)">
+                                <img src="assets/foreign/lucky/downarrow.svg" alt="">
+                              </button>
+                                                </div>
+
+                                                <div class="textR mt-5">
+
+                                                    <button mat-stroked-button class="outline-success b_green c_white" (click)="acceptReedem(mine.acBalH, x, x.id, x.journey, amt?.value, x.camp, campaign, x.code)" [disabled]="makeChanges">Accept</button>                                                    <br>
+                                                    <ng-container *ngIf="showDetailsRedeem.includes(x.id)">
+                                                        <button mat-stroked-button color="danger" class="outline-danger  mt-3 c_red" (click)=" rejectReedem(x.id) " [disabled]="makeChanges">Reject</button>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex-column d-sm-none d-md-block">
+                                    <div class="redeem-item header col-100">
+                                        <div class="d-flex-row">
+                                            <div class="col-25">
+                                                <p class="text-primary">Details </p>
+                                            </div>
+                                            <div class="col-25">
+                                                <p class="text-primary">Bill Amount </p>
+                                            </div>
+                                            <div class="col-25">
+                                                <p class="text-primary">Instant Cashback (Rs.) </p>
+                                            </div>
+                                            <div class="col-20">
+                                                <p class="text-primary">Action </p>
+                                            </div>
+                                            <div class="col-5"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="redeem-item col-100" *ngFor="let x of paymentRedeem">
+                                        <div class="d-flex-row">
+                                            <div class="col-25">
+
+                                                <h5>{{x.userName || "No Name"}}</h5>
+                                                <ng-container *ngIf="showDetailsRedeem.includes(x.id)">
+                                                    <p *ngIf="x.sin">{{ x.sin.toDate() | date:'MMM, dd, yyyy hh:mm' }} </p>
+
+                                                    <p *ngIf="x.journey == 'POS' && campaign">Min Order Value : {{ getCampAmt( campaign, "min") }} </p>
+                                                    <p *ngIf="x.journey == 'POS' && campaign && x.type == 'percent' " class="text-primary">Maximum Cashback : {{ getCampAmt( campaign, "max") }} </p>
+                                                    <p *ngIf="x.journey == 'F2F'">Min Order Value : {{x.camp.min}}</p>
+                                                    <p *ngIf="x.journey == 'F2F' && x.type == 'percent'" class="text-primary">Maximum Cashback : {{x.camp.max}} </p>
+                                                </ng-container>
+
+                                            </div>
+                                            <div class="col-25">
+
+                                                <input class="bill-card" #amt type="number" value="" placeholder="Enter Bill amount" style="width: auto;" [disabled]="makeChanges" required>
+                                                <div style="margin: 4px 0;">
+                                                    <select [(ngModel)]="campaign" class="bill-card" [class.col-none]="x.journey !== 'POS'" style="width: auto;" name="camps" [disabled]="makeChanges" required>
+                                                    <option value="">No Campaign</option>
+                                                    <ng-container *ngFor="let c of campaigns">
+                                                        <option [value]="c.id">{{c.name}}</option>
+                                                    </ng-container>
+                                              </select>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-25">
+
+
+                                                <div class="cashback-card">
+                                                    <span *ngIf="x.journey == 'POS' && campaign"> {{ getCampAmt( campaign, "cbDir") }} </span>
+                                                    <span *ngIf="x.journey == 'F2F'"> {{x.camp.cbNew}} </span>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-15">
+
+                                                <div class="d-flex-column">
+                                                    <button mat-stroked-button class="outline-success b_green c_white" (click)="acceptReedem(mine.acBalH, x, x.id, x.journey, amt?.value, x.camp, campaign, x.code)" [disabled]="makeChanges">Accept</button>                                                    <br>
+                                                    <ng-container *ngIf="showDetailsRedeem.includes(x.id)">
+                                                        <button mat-stroked-button class="outline-danger c_red" (click)=" rejectReedem(x.id) " [disabled]="makeChanges">Reject</button>
+                                                    </ng-container>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="d-flex-row">
+                                                    <img class="col-20" [src]="
+                                                    ( x.journey == 'POS' ? 'assets/foreign/lucky/personicon2.svg':'') +
+                                                    ( x.journey == 'F2F' ? 'assets/foreign/lucky/personicon.svg':'')
+                                                    " alt="">
+                                                    <button mat-icon-button (click)="expandRedeemCard(x.id)">
+                                <img src="assets/foreign/lucky/downarrow.svg" alt="">
+                              </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <p *ngIf="paymentRedeem.length == 0"><br>You have no reedem requests.</p>
+                            </ng-container>
+                        </ng-container>
+                        <app-content *ngIf="!(paymentRedeem$ | async)"></app-content>
+
+
+                    </div>
+                </div>
+                <br>
+                <div class="active-campaigns">
+                    <div class="active-campaigns mat-card b_persist">
+                        <div class="heading"> <b> Active Store Campaigns </b>
+                            <a class="ml-auto view-details c_primary" routerLink="/campaign">View All</a> </div>
+                        <hr>
+
+
+
+                        <ng-container *ngIf="campaign$ | async  as campaign">
+                            <div class="d-flex-row-md  d-flex-column-sm flex-wrap">
+
+
+                                <div class="col-50 col-md-100 col-sm-100" *ngFor="let x of campaign">
+                                    <div class="campaign-item c_black">
+                                        <div class="d-flex-column">
+                                            <div class="d-flex-row mt-md-10 mt-sm-5">
+
+                                                <!--p class="camp_title">{{x.name}} 
+                                    <span class="status c_white b_black" *ngIf="x.tX == 'tC' && !x.customAct">{{!x.ban ? 'Pending':'Rejected'}}</span>
+                                    <span class="status c_white" *ngIf=" x.tX !== 'tC' || x.tX == 'tC' && x.customAct "
+                                [class.b_green]=" auth.resource.compareDates( x.dateE.toDate() ) " 
+                                [class.b_red]=" x.stoped || x.paused || !auth.resource.compareDates( x.dateE.toDate() ) ">
+                                {{ !auth.resource.compareDates( x.dateE.toDate() ) ? 'Expired':''}}
+                                {{ !x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Active':''}}
+                                {{ x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Stopped':''}}
+                                {{ !x.stoped && x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Paused':''}}</span></p-->
+
+                                                <h3 class="mr-5 col-70 col-sm-60">
+                                                    <b> {{x.name}} </b>
+                                                    <button mat-button class="active-chip c_white b_black" *ngIf="x.tX == 'tC' && !x.customAct">{{!x.ban ? 'Pending':'Rejected'}}</button>
+                                                    <button class="active-chip c_white" [class.b_green]=" auth.resource.compareDates( x.dateE.toDate() ) " [class.b_red]=" x.stoped || x.paused || !auth.resource.compareDates( x.dateE.toDate() ) " mat-button *ngIf=" x.tX !== 'tC' || x.tX == 'tC' && x.customAct ">
+                                {{ !auth.resource.compareDates( x.dateE.toDate() ) ? 'Expired':''}}
+                                {{ !x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Active':''}}
+                                {{ x.stoped && !x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Stopped':''}}
+                                {{ !x.stoped && x.paused && auth.resource.compareDates( x.dateE.toDate() ) ? 'Paused':''}}</button>
+                                                </h3>
+                                                <div class="col-5 col-sm-5"> </div>
+                                                <button class="quick-chip col-25 col-sm-35 b_white" mat-button (click)="sendSMS()"><img src="assets/foreign/lucky/send.svg" alt=""> Quick Send</button>
+                                            </div>
+                                            <div class="dash-border align-items-center d-flex-row">
+                                                <div class="col-65  col-sm-50">
+                                                    <h5> <b> On Direct Sale</b>
+                                                    </h5>
+                                                    <div> <img src="assets/foreign/lucky/percent.svg" alt="" width="15" height="15"> <span> You give:
+                                    {{ x.type == 'flat' ? '₹':''}}{{x.cbDir}}{{ x.type == 'percent' ? '%':''}}</span></div>
+                                                    <div class="mt-5"></div>
+                                                    <h5> <b>Sale Via Recommendation </b> </h5>
+                                                    <div> <img src="assets/foreign/lucky/customerpinknew.svg" alt="">
+                                                        <span> New Customer : {{ x.type == 'flat' ? '₹':''}}{{x.cbNew}}{{ x.type == 'percent' ? '%':''}}</span>
+                                                    </div>
+                                                    <div class="mt-3"> <img src="assets/foreign/lucky/customerpink.svg" alt="">
+                                                        <span> Existing Customer : {{ x.type == 'flat' ? '₹':''}}{{x.cbExi}}{{ x.type == 'percent' ? '%':''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-35  col-sm-50">
+                                                    <div class="padding-grd ">
+                                                        <div class="bg-gradient b_gradient c_white">
+                                                            <h6 *ngIf="x.type == 'flat'">Cashback ₹{{x.cbDir}}/-</h6>
+                                                            <h6 *ngIf="x.type == 'percent'">{{x.cbDir}}% Cashback upto ₹{{x.max}}/-</h6>
+                                                            <h6>Minimum order value ₹{{x.min}}/-</h6>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="d-flex-row mt-5">
+                                                <div class="col-50">
+                                                    <p> Expiry Date <br> <b> {{x.dateE.toDate() | date:'MMM dd, yyyy'}} </b> </p>
+                                                </div>
+                                                <div class="col-50">
+                                                    <button class="copy-chip float-right b_white" mat-button><img src="assets/foreign/lucky/copy.svg" class="mx-3" alt=""> Copy to Clipboard</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p *ngIf="campaign.length == 0"><br>You have no recent orders.</p>
+
+                            </div>
+                        </ng-container>
+
+
+                        <app-content *ngIf="!(campaign$ | async)"></app-content>
+
+
+
+                    </div>
+                </div>
+                <br>
+
+
+
+
+
+                <div class="recent-orders">
+                    <div class="mat-card b_persist">
+                        <div class="heading"> <b> Recent Orders </b> <a class="ml-auto view-details c_primary" routerLink="/my-order-list">View All</a> </div>
+                        <hr>
+
+                        <div class="d-flex-row-md d-flex-col-sm flex-wrap">
+                            <ng-container *ngIf="paymentOrder$ | async as paymentOrder">
+
+
+                                <div class="col-50 col-sm-100" *ngFor="let x of paymentOrder">
+                                    <div class="order-item c_black">
+                                        <div class="d-flex-column">
+                                            <div>
+                                                <h3 style="
+                              line-height: 40px !important;
+                              padding: 0 !important;
+                              margin: 0 !important;"> {{x.userName}}
+                                                    <button class="float-right" mat-icon-button (click)="expandOrderCard(x.id)">
+                                  <img src="assets/foreign/lucky/downarrow.svg" alt="">
+                                </button>
+                                                </h3>
+                                            </div>
+                                            <ng-container>
+                                                <div class="d-flex-row">
+                                                    <div class="col-50">
+                                                        <span> Order No : {{x.id}} </span>
+                                                    </div>
+                                                    <div class="col-50">
+                                                        <span class="float-right"> {{x.sin.toDate() | date:'MMM dd, yyyy | hh:mm'}} </span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex-row">
+                                                    <div class="col-50">
+                                                        <span> Cashback Given : {{x.earn}}</span>
+                                                    </div>
+                                                    <div class="col-50">
+                                                        <span class="float-right"> Order Amount: {{x.amTotal}} </span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex-row">
+                                                    <div class="col-50">
+                                                        <span> Items : {{x.cart?.length|| 0}}</span>
+                                                    </div>
+                                                </div>
+
+                                                <ng-container *ngIf="showDetailsOrders.includes(x.id)">
+
+                                                    <div class="d-flex-row" *ngIf=" x.journey == 'F2F' || x.journey == 'DIRECT' ">
+                                                        <div class="col-50">
+                                                            <span> Contact Number : </span>
+                                                        </div>
+                                                        <div class="col-50">
+                                                            <span class="float-right"> {{x.logistics.phone}}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex-row" *ngIf=" x.journey == 'F2F' || x.journey == 'DIRECT'  ">
+                                                        <div class="col-50">
+                                                            <span> Drop Address :</span>
+                                                        </div>
+                                                        <div class="col-50">
+                                                            <span class="float-right" *ngIf="x.logistics.addressDrop">{{x.logistics.addressDrop.address}}, {{x.logistics.addressDrop.zip}}, {{x.logistics.addressDrop.landmark}}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex-row" *ngIf=" x.journey == 'F2F' || x.journey == 'DIRECT'  ">
+                                                        <div class="col-50">
+                                                            <span> Pick Address : </span>
+                                                        </div>
+                                                        <div class="col-50">
+                                                            <span class="float-right" *ngIf="x.logistics.addressPick">{{x.logistics.addressPick.line1}}, {{x.logistics.addressPick.zip}}, {{x.logistics.addressPick.locality}}</span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <ng-container *ngIf=" x.journey == 'F2F' || x.journey == 'DIRECT'  ">
+                                                        <div class="d-flex-row c_primary">
+                                                            <div class="col col-100"></div>
+                                                        </div>
+                                                        <div class="d-flex-row" *ngFor="let c of x.cart">
+                                                            <div class="col-50">
+                                                                <span> {{c.title}} </span>
+                                                            </div>
+                                                            <div class="col-25">
+                                                                <span class="float-right"> X{{c.Q}}</span>
+                                                            </div>
+                                                            <div class="col-25">
+                                                                <span class="float-right"> ₹{{c.cost}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex-row c_primary">
+                                                            <div class="col col-100"></div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+
+                                                <div class="mt-5"></div>
+                                                <div class="d-flex-row">
+                                                    <div class="col-25">
+                                                        <p style="
+                                  line-height: 36px !important;
+                                  padding: 0 !important;
+                                  margin: 0 !important;"> Status</p>
+                                                    </div>
+                                                    <div class="col-75">
+                                                        <!--button mat-stroked-button color="primary">List Items</button-->
+
+                                                        <button class="status-chip float-right b_primary c_white" mat-button *ngIf=" x.journey == 'POS' ">Complete</button>
+
+
+                                                        <select *ngIf=" x.journey == 'F2F' && x.status == 0  || x.journey == 'DIRECT' && x.status == 0 " #oStatePlaced [ngModel]=" 'Placed' " (ngModelChange)="ordrStatus(  x.journey, x , oStatePlaced.value )" name="ordrStatusPlaced" [disabled]="makeChanges" required class="status-chip float-right b_warn c_white"
+                                                            style="
+                                                        height: 36px;
+                                                        padding: 0 0 0 8px;
+                                                        line-height: 36px;">
+                                                        <option value="Placed">Placed</option>
+                                                        <option value="Refund" >Refund</option>
+                                                        <option value="Shipping" >Shipping</option>
+                                                        <option value="Delivered" >Delivered</option>
+                                                        </select>
+
+                                                        <select *ngIf=" x.journey == 'F2F' && x.status == 10 && x.logistics.status == 10 || x.journey == 'DIRECT' && x.status == 10 && x.logistics.status == 10  " #oStateShipping [ngModel]=" 'Shipping' " (ngModelChange)="ordrStatus( x.journey, x , oStateShipping.value )" name="ordrStatusShipping" [disabled]="makeChanges" required class="status-chip float-right b_primary c_white"
+                                                            style="
+                                                        height: 36px;
+                                                        padding: 0 0 0 8px;
+                                                        line-height: 36px;">
+                                                        <option value="Shipping" >Shipping</option>
+                                                        <option value="Delivered" >Delivered</option>
+                                                        </select>
+
+                                                        <!--button class="status-chip float-right b_warn c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == 0 ">Placed</button-->
+                                                        <!--button class="status-chip float-right b_primary c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == 10 && x.logistics.status == 10">Shipping</button-->
+                                                        <button class="status-chip float-right b_primary c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == 10 && x.logistics.status == 0 || x.journey == 'DIRECT' && x.status == 10 && x.logistics.status == 0 ">Complete</button>
+                                                        <button class="status-chip float-right b_green c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == 10 && x.logistics.status == 20 || x.journey == 'DIRECT' && x.status == 10 && x.logistics.status == 20 ">Delivered</button>
+
+                                                        <button class="status-chip float-right b_warn c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == -10 && x.logistics.status == -10 || x.journey == 'DIRECT' && x.status == -10 && x.logistics.status == -10 ">Rejected</button>
+                                                        <button class="status-chip float-right b_primary c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == -10 && x.logistics.status == -100 ||  x.journey == 'DIRECT' && x.status == -10 && x.logistics.status == -100 ">Returned</button>
+                                                        <button class="status-chip float-right b_warn c_white" mat-button *ngIf=" x.journey == 'F2F' && x.status == -10 && x.logistics.status == -1000 || x.journey == 'DIRECT' && x.status == -10 && x.logistics.status == -1000 ">Refunded</button>
+                                                        <button class="status-chip float-right b_green c_white" mat-flat-button *ngIf="false">Prepared</button>
+                                                        <button class="status-chip float-right b_primary c_white" mat-button *ngIf="false">Pending</button>
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <p *ngIf="paymentOrder.length == 0"><br>You have no recent orders.</p>
+                            </ng-container>
+
+                        </div>
+                        <app-content *ngIf="!(paymentOrder$ | async)"></app-content>
+
+
+
+
+                    </div>
+                </div>
+                <br>
+
+                <!--
+                <div class="ledger-details">
+                  <div class="mat-card b_persist">
+                    <div>
+                      <div class="heading"> <b> Ledger Details</b> <a class="ml-auto view-details c_primary" href="#">View All</a> </div>
+                      <hr>
+        
+                      <div class="d-flex-row-md d-flex-column-sm flex-wrap">
+
+
+                        <div class="col-50 col-md-100 col-sm-100">
+                          <div class="ledger-item c_black">
+                            <div class="d-flex-column">
+                              <div class="d-flex-row">
+                                <div class="mr-5"> <img src="assets/foreign/lucky/ledgerpic.png" alt=""></div>
+                                <div class="mr-5 col-90">
+                                  <h5> <b>Simran Ahuja </b> <br>
+                                    +91 12345678 <br>
+                                    loreipsum@email.com
+                                  </h5>
+        
+                                </div>
+                                <div class="col-10 textR">
+                                  <button mat-icon-button (click)="expandLedgerCard(0)">
+                                    <img src="assets/foreign/lucky/downarrow.svg" alt="">
+                                  </button>
+                                </div>
+        
+                              </div>
+                              <ng-container *ngIf="showLedgerOrders[0].show">
+        
+                                <div class="d-flex-column">
+                                  <div class="col-100">
+                                    <p> Created Date <span class="float-right"> Jan 02,2022 </span> </p>
+                                    <p> Referred by <span class="float-right"> Roshan khan </span> </p>
+                                    <p> Total Referrals <span class="float-right"> 3 </span> </p>
+                                    <p> Earning Potential <span class="float-right"> $ </span> </p>
+                                    <p> Cashback Earned <span class="float-right"> $ </span> </p>
+                                  </div>
+                                </div>
+                              </ng-container>
+        
+                            </div>
+                          </div>
+                        </div>
+        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            -->
+                <br>
+                <!--
+                <div class="revenue-overview">
+                  <div class="mat-card b_persist">
+                    <div>
+                      <div class="heading"> <b> Revenue Overview</b> </div>
+                      <hr>
+        
+                      <div class="d-flex-row-md d-flex-column-sm">
+        
+                        <div class="col-50  col-md-100 col-sm-100">
+                          <div>
+                            <img width="100%" src="assets/foreign/lucky/sideicons/chart.svg" alt="">
+                          </div>
+                          <br>
+                          <div class="d-flex-row-md d-flex-column-sm revenue-line">
+                            <div class="col-33 col-sm-100 mr-5">
+                              <b> Total Shares </b>
+                            </div>
+                            <div class="col-33 col-sm-100 mr-5">
+                              <b>Total Revenue : ₹ </b>
+                            </div>
+                            <div class="col-33 col-sm-100 mr-5">
+                              <b>Total Spent : ₹ </b>
+                            </div>
+        
+                          </div>
+        
+                        </div>
+                        <br>
+                        <div class="col-50 col-md-100  col-sm-100 d-flex-row">
+                          <div class="mr-md-25">
+        
+                          </div>
+                          <div class="col-50  col-sm-45 mr-10">
+                            <p>Yearly </p>
+                            <mat-form-field appearance="fill">
+                              <mat-label>Year</mat-label>
+                              <mat-select>
+                                <mat-option>2022
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+        
+                            <div class="money-stat">
+                              <div class="money-card">
+                                <div>
+                                  <div class="d-flex-row align-items-center">
+                                    <div class="col-30 col-sm-50 textC">
+                                      <img src="assets/foreign/lucky/sideicons/moneyin.svg" alt="">
+                                    </div>
+                                    <div class="col-70 col-sm-50 mt-5">
+                                      <h4> <span class="text-grey"> Money In</span>
+                                        <br> <b>₹ 256751</b>
+                                      </h4>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-5 mr-5">
+        
+                          </div>
+                          <div class="col-50  col-sm-45 mr-10">
+                            <p>Monthly </p>
+                            <mat-form-field appearance="fill">
+                              <mat-label>Month</mat-label>
+                              <mat-select>
+                                <mat-option>January
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+        
+                            <div class="money-stat">
+                              <div class="money-card">
+                                <div>
+                                  <div class="d-flex-row align-items-center">
+                                    <div class="col-30 col-sm-50 textC">
+                                      <img src="assets/foreign/lucky/sideicons/moneyout.svg" alt="">
+                                    </div>
+                                    <div class="col-70 col-sm-50 mt-5">
+                                      <h4> <span class="text-grey"> Money Out</span>
+                                        <br> <b>₹ 256751</b>
+                                      </h4>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+        
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+            -->
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
