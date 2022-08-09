@@ -1,10 +1,5 @@
-<div class="container" *ngIf="auth.user$ | async as mine">
-    <div class="row balanceCard">
-        <div class="col col-100 textC" style="margin-bottom: 0px;">
-            <div style="display: flex; margin: 0 auto;
-            min-width: 340px;
-            width: -webkit-fill-available;
-            max-width: 420px;">
+<!--
+
                 <button mat-flat-button color="primary" [matMenuTriggerFor]="menuQR"><mat-icon>qr_code</mat-icon> Get QR</button>
                 <span class="divide"></span>
                 <button mat-flat-button color="primary" [matMenuTriggerFor]="menuLocate"><mat-icon>published_with_changes</mat-icon> Choose Site (All)</button>
@@ -18,142 +13,381 @@
             </mat-menu>
             <mat-menu #menuLocate="matMenu" xPosition="before" overlapTrigger="false">
                 <button mat-menu-item><mat-icon>{{false ? 'check_box_outline_blank':'check_box_outline'}}</mat-icon> All Store Locations</button>
-                <button mat-menu-item *ngFor="let l of mine.storeLoc; let i = index;"><mat-icon>check_box_outline_blank</mat-icon> Location {{i + 1}}<!--{{l}}--></button>
+                <button mat-menu-item *ngFor="let l of mine.storeLoc; let i = index;"><mat-icon>check_box_outline_blank</mat-icon> Location {{i + 1}}</button>
             </mat-menu>
-            <!--button mat-flat-button color="primary"><mat-icon>shopping_cart</mat-icon> Get Merchandise</button-->
-            <!--button mat-flat-button color="primary">Tent@39</button>
-            &nbsp;
-            <button mat-flat-button color="primary">Standee@99</button-->
-        </div>
+-->
 
-        <div class="col col-100 textC col-card">
-            <div class="payCard card-box b_gradient c_white">
+<div class="container" *ngIf="auth.user$ | async as mine">
+
+    <div class="row balanceCard">
+
+        <div class="col col-50 col-sm-100 textC col-card">
+            <div class="payCard card-box c_white">
                 <table>
                     <tr>
-                        <td>Scan to Share</td>
-                        <td class="moneyTitle">Store Account</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="3"><span class="scanPad">
-                            <div #canvasX id="canvasX"></div>
-                        </span></td>
-                        <td>
-                            <h3>₹ {{mine.acBalV| number:'1.2-2'}}</h3>
+                        <td></td>
+                        <td class="Title">
+                            <svg width="16" height="15" viewBox="0 0 16 15" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M0.875 13.7428V5.69844C0.88 5.69094 0.888125 5.68344 0.889375 5.67531C0.97625 5.01844 1.54375 4.51719 2.28125 4.55031C2.56313 4.56219 2.84375 4.55844 3.12875 4.55031C3.2285 4.54787 3.3263 4.52219 3.41437 4.47531C4.845 3.64781 6.26625 2.80406 7.70312 1.98781C8.50063 1.53469 9.24813 0.987812 10.1163 0.664062H10.45C11.0125 0.752812 11.3338 1.12281 11.595 1.59719C12.1231 2.55469 12.6781 3.49719 13.22 4.44844C13.2389 4.48735 13.2675 4.5207 13.3031 4.54524C13.3387 4.56978 13.3801 4.58466 13.4231 4.58844C13.6399 4.62151 13.8429 4.7151 14.0087 4.85844C14.3431 5.13469 14.4819 5.49969 14.4825 5.92469C14.4825 6.52344 14.4825 7.12156 14.4825 7.72031C14.4772 7.75807 14.4848 7.79651 14.5041 7.8294C14.5234 7.86229 14.5532 7.88772 14.5887 7.90156C14.7511 7.97471 14.8884 8.09374 14.984 8.244C15.0795 8.39425 15.1289 8.56917 15.1262 8.74719C15.1362 9.40552 15.1362 10.0641 15.1262 10.7228C15.1206 11.1078 14.9281 11.3934 14.5856 11.5672C14.552 11.5795 14.5235 11.6028 14.5048 11.6333C14.4861 11.6638 14.4782 11.6998 14.4825 11.7353C14.4862 12.3336 14.4862 12.932 14.4825 13.5303C14.4903 13.7535 14.4447 13.9753 14.3494 14.1772C14.0919 14.6772 13.6756 14.9141 13.1219 14.9147C11.559 14.9172 9.99646 14.9172 8.43437 14.9147C6.37479 14.9147 4.315 14.9147 2.255 14.9147C1.795 14.9147 1.41563 14.7528 1.13 14.3809C0.9825 14.1878 0.918125 13.9697 0.875 13.7428ZM13.8188 11.6747C13.7488 11.6747 13.6894 11.6747 13.6313 11.6747C12.9869 11.6697 12.3406 11.6934 11.6981 11.6541C10.5519 11.5847 9.72125 10.4172 9.99375 9.30031C10.2144 8.39531 10.9656 7.79469 11.8962 7.78719C12.4856 7.78219 13.0744 7.78719 13.6637 7.78719H13.8175C13.822 7.7607 13.8251 7.734 13.8269 7.70719C13.8269 7.09469 13.8325 6.48219 13.8269 5.87031C13.8219 5.44469 13.5525 5.19719 13.1112 5.19719H2.24062C2.16655 5.19504 2.09248 5.20175 2.02 5.21719C1.69375 5.29656 1.52 5.55094 1.52 5.93844C1.52 8.1926 1.52 10.447 1.52 12.7016C1.52 12.9891 1.52 13.2766 1.52 13.5641C1.52 13.8059 1.59312 14.0272 1.81 14.1441C1.95667 14.2206 2.11955 14.2609 2.285 14.2616C5.87958 14.2686 9.47417 14.2703 13.0688 14.2666C13.1243 14.2675 13.1798 14.265 13.235 14.2591C13.5625 14.2184 13.8106 13.9947 13.8169 13.6872C13.8281 13.0241 13.8188 12.3609 13.8188 11.6747ZM12.9438 11.0147V11.0228C13.315 11.0228 13.6863 11.0228 14.0569 11.0228C14.3594 11.0228 14.4769 10.9053 14.4775 10.6022C14.4775 10.023 14.4775 9.44344 14.4775 8.86344C14.4775 8.55094 14.3575 8.43219 14.0513 8.43219C13.3556 8.43219 12.66 8.42719 11.9644 8.43219C11.8027 8.43563 11.6422 8.46 11.4869 8.50469C10.9469 8.65594 10.5063 9.25031 10.6075 9.93719C10.6888 10.4866 11.195 10.9803 11.7756 11.0084C12.165 11.0297 12.555 11.0147 12.9444 11.0147H12.9438ZM10.8544 1.63156C10.6406 1.29906 10.2919 1.21844 9.94938 1.41906C8.19938 2.43573 6.44938 3.45427 4.69938 4.47469C4.67375 4.48969 4.65125 4.50906 4.59625 4.54969C4.98875 4.54969 5.34625 4.55469 5.69812 4.54656C5.79364 4.54451 5.88729 4.51965 5.97125 4.47406C7.55875 3.5574 9.14458 2.63552 10.7288 1.70844C10.77 1.68781 10.8081 1.66031 10.8544 1.63156ZM7.19063 4.51906L7.20063 4.54969C7.56438 4.54969 7.92812 4.55344 8.29187 4.54656C8.37373 4.54518 8.454 4.52372 8.52563 4.48406C9.48021 3.93323 10.4329 3.37969 11.3837 2.82344C11.4219 2.80094 11.4581 2.77469 11.5 2.74781L11.1825 2.19531L7.19063 4.51906ZM11.825 3.31281L9.72625 4.53781H12.5244L11.825 3.31281Z"
+                                    fill="url(#paint0_linear_1777_13736)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_1777_13736" x1="12.9087" y1="4.37531" x2="2.94312"
+                                        y2="14.5684" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FF3269" />
+                                        <stop offset="1" stop-color="#FF794D" stop-opacity="0.8" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            Store Wallet
                         </td>
                     </tr>
                     <tr>
-                        <td class="moneyTitle">Campaign Wallet</td>
+                        <div class="money">
+                            ₹ {{mine.acBalV| number:'1.2-2'}}
+                            <!-- ₹ {{mine.acBalV| number:'1.2-2'}} -->
+                        </div>
+                        <div class="balance">
+                            Your Balance
+                        </div>
                     </tr>
-                    <tr>
-                        <td>
-                            <h3>₹ {{mine.acBalH| number:'1.2-2'}}</h3>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p>{{mine.name}}</p>
-                        </td>
-                        <td>
-                            <p class="moneyTitle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="f_white">
-                            <path d="M15.1,19.37l1,1.74c-0.96,0.44-2.01,0.73-3.1,0.84v-2.02C13.74,19.84,14.44,19.65,15.1,19.37z M4.07,13H2.05 c0.11,1.1,0.4,2.14,0.84,3.1l1.74-1C4.35,14.44,4.16,13.74,4.07,13z M15.1,4.63l1-1.74C15.14,2.45,14.1,2.16,13,2.05v2.02 C13.74,4.16,14.44,4.35,15.1,4.63z M19.93,11h2.02c-0.11-1.1-0.4-2.14-0.84-3.1l-1.74,1C19.65,9.56,19.84,10.26,19.93,11z M8.9,19.37l-1,1.74c0.96,0.44,2.01,0.73,3.1,0.84v-2.02C10.26,19.84,9.56,19.65,8.9,19.37z M11,4.07V2.05 c-1.1,0.11-2.14,0.4-3.1,0.84l1,1.74C9.56,4.35,10.26,4.16,11,4.07z M18.36,7.17l1.74-1.01c-0.63-0.87-1.4-1.64-2.27-2.27 l-1.01,1.74C17.41,6.08,17.92,6.59,18.36,7.17z M4.63,8.9l-1.74-1C2.45,8.86,2.16,9.9,2.05,11h2.02C4.16,10.26,4.35,9.56,4.63,8.9z M19.93,13c-0.09,0.74-0.28,1.44-0.56,2.1l1.74,1c0.44-0.96,0.73-2.01,0.84-3.1H19.93z M16.83,18.36l1.01,1.74 c0.87-0.63,1.64-1.4,2.27-2.27l-1.74-1.01C17.92,17.41,17.41,17.92,16.83,18.36z M7.17,5.64L6.17,3.89 C5.29,4.53,4.53,5.29,3.9,6.17l1.74,1.01C6.08,6.59,6.59,6.08,7.17,5.64z M5.64,16.83L3.9,17.83c0.63,0.87,1.4,1.64,2.27,2.27 l1.01-1.74C6.59,17.92,6.08,17.41,5.64,16.83z M13,7h-2v5.41l4.29,4.29l1.41-1.41L13,11.59V7z"/>
-                        </svg> Pending ₹ {{mine.acBalVr| number:'1.2-2'}}
-                                <!-- & {{mine.acBalP}} Refr Points-->
-                            </p>
-                        </td>
-                    </tr>
+
                 </table>
+                <div class="line"></div>
+                <div class="button_cont">
+                    <span class="divide"></span>
+                    <button class="addbutton" mat-button (click)="addTransfer()">
+                        Add to Campaign
+                    </button>
+                    <button class="addbutton" mat-button (click)="addWithdraw()">
+                        Withdraw
+                    </button>
+                </div>
+                <div class="Sub_title">
+                    To be Credited
+                    <span> ₹ {{mine.acBalVr| number:'1.2-2'}}
+                        <!-- {{mine.acBalVr| number:'1.2-2'}} -->
+                    </span>
+                </div>
             </div>
         </div>
-        <!--div class="col col-100 textC">
-   
-<div class="content" role="main">
-  <h2>{{title}}</h2>
-  <p>qrCode: {{qrCode}}</p>
-  
-  <label>
-    <input (keyup)="onKey($event)" value={{this.data}}>
-    <select (change)="onChange($event)" value={{this.extension}}>
-      <option value="svg">SVG</option>
-      <option value="png">PNG</option>
-      <option value="jpeg">JPEG</option>
-      <option value="webp">WEBP</option>
-    </select>
-    <button (click)="download()">Download</button>
-  </label>
-</div>
 
-        </div-->
-        <div class="col col-100 textC">
-            <button mat-raised-button (click)="addMoney()">Add Money</button> &nbsp;
-            <button mat-raised-button (click)="addMoneyCustom()">Add Money</button> &nbsp;
-            <button mat-raised-button (click)="addTransfer()">Transfer</button> &nbsp;
-            <button mat-raised-button (click)="addWithdraw()">Withdraw</button>
+        <div class="col col-50 col-sm-100 textC col-card">
+            <div class="payCard card-box c_white">
+                <table>
+                    <tr>
+                        <td></td>
+                        <td class="Title">
+                            <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M5.2507 16.4383C5.16508 16.3621 5.05258 16.3758 4.9532 16.3565C4.19116 16.1883 3.51297 15.7564 3.0382 15.1371C3.01311 15.1004 2.97853 15.0711 2.93813 15.0525C2.89773 15.0339 2.85304 15.0266 2.80883 15.0315C2.4557 15.0446 2.10695 15.0315 1.78445 14.8583C1.2157 14.5546 0.889453 14.0802 0.886328 13.4383C0.873828 11.0354 0.873828 8.63187 0.886328 6.2277C0.890323 5.8132 1.05447 5.41631 1.34441 5.12008C1.63436 4.82384 2.02764 4.65122 2.44195 4.63833C2.89945 4.62458 3.3582 4.63083 3.81695 4.63833C3.92697 4.6394 4.03514 4.60998 4.12945 4.55333C6.2182 3.34499 8.30758 2.13833 10.3976 0.933327C10.8576 0.668327 11.2851 0.782702 11.5507 1.24145C12.184 2.33104 12.8145 3.42124 13.442 4.51208C13.4605 4.55205 13.4903 4.58575 13.5277 4.60905C13.5651 4.63236 13.6085 4.64427 13.6526 4.64333C14.4263 4.69083 15.0901 5.38833 15.1195 6.1802C15.1257 6.34833 15.1226 6.51645 15.1226 6.68458C15.1226 8.90958 15.1226 11.1348 15.1226 13.3602C15.1226 14.1596 14.6226 14.8015 13.8626 14.9852C13.7137 15.0186 13.5613 15.0337 13.4088 15.0302C11.7897 15.0302 10.1703 15.0292 8.5507 15.0271C8.50905 15.0243 8.4674 15.0325 8.42982 15.0507C8.39224 15.0688 8.36003 15.0965 8.33633 15.1308C7.7607 15.8571 7.01633 16.2927 6.09133 16.4052C6.07008 16.4083 6.05195 16.4108 6.04633 16.4352L5.2507 16.4383ZM8.71508 14.5383C8.7607 14.5383 8.78883 14.5433 8.81758 14.5433C10.3757 14.5433 11.9345 14.5433 13.4926 14.5433C13.642 14.5439 13.79 14.515 13.9282 14.4582C14.0663 14.4014 14.1919 14.3179 14.2978 14.2124C14.4036 14.1069 14.4875 13.9816 14.5447 13.8436C14.602 13.7057 14.6314 13.5577 14.6313 13.4083C14.6363 12.8583 14.6313 12.3083 14.6351 11.7583C14.6351 11.6502 14.6063 11.6258 14.5007 11.6265C13.5995 11.6306 12.698 11.6306 11.7963 11.6265C11.4151 11.6265 11.0326 11.6446 10.6513 11.6127C9.60883 11.5271 8.83883 10.4596 9.08883 9.44333C9.29758 8.5927 9.99445 8.03895 10.8688 8.03708C12.0772 8.03458 13.2842 8.03458 14.4901 8.03708C14.5982 8.03708 14.6357 8.0202 14.6338 7.89958C14.6257 7.3802 14.6338 6.86083 14.6338 6.34083C14.6338 5.59708 14.1582 5.12208 13.4113 5.12208C9.80591 5.12208 6.20029 5.12208 2.59445 5.12208C2.48749 5.11769 2.38037 5.12524 2.27508 5.14458C1.7282 5.26958 1.37195 5.71895 1.37133 6.29395C1.37133 8.3002 1.37133 10.3067 1.37133 12.3133C1.37133 12.6883 1.35945 13.0677 1.37133 13.444C1.4032 14.2346 2.14195 14.6277 2.64383 14.524C1.9157 12.894 2.51883 11.314 3.5707 10.4683C4.12097 10.0198 4.79978 9.75808 5.50875 9.72122C6.21773 9.68436 6.92002 9.87424 7.51383 10.2633C8.11241 10.6452 8.57081 11.211 8.82008 11.8758C9.15945 12.7671 9.11258 13.6546 8.7157 14.5371L8.71508 14.5383ZM8.5532 13.0902C8.55543 12.5222 8.38905 11.9663 8.07513 11.4929C7.76121 11.0195 7.31387 10.6498 6.78975 10.4308C6.26564 10.2118 5.68832 10.1533 5.13091 10.2626C4.5735 10.3719 4.06106 10.6442 3.65848 11.0449C3.2559 11.4457 2.9813 11.9568 2.86943 12.5137C2.75756 13.0707 2.81347 13.6482 3.03007 14.1733C3.24667 14.6985 3.61423 15.1475 4.08619 15.4636C4.55815 15.7797 5.1133 15.9486 5.68133 15.949C6.4408 15.9483 7.16916 15.6472 7.70736 15.1113C8.24556 14.5755 8.54987 13.8484 8.55383 13.089L8.5532 13.0902ZM12.6257 11.1365C13.2413 11.1365 13.8576 11.1327 14.4738 11.1396C14.5988 11.1396 14.6357 11.1158 14.6338 10.9846C14.627 10.2821 14.6338 9.57958 14.6338 8.87645C14.6338 8.52458 14.6338 8.52458 14.2813 8.52458C13.1413 8.52458 12.0007 8.51958 10.8601 8.52458C10.6661 8.52175 10.4739 8.56229 10.2976 8.64325C10.1213 8.72421 9.96527 8.84353 9.84098 8.99251C9.71668 9.14148 9.62724 9.31634 9.57918 9.5043C9.53112 9.69227 9.52566 9.8886 9.5632 10.079C9.67008 10.6977 10.2163 11.1308 10.9051 11.1358C11.4776 11.1396 12.0526 11.1365 12.6257 11.1365ZM5.02008 4.60208L5.03133 4.6327C5.55445 4.6327 6.07758 4.6327 6.6007 4.6327C6.65638 4.62912 6.71 4.61031 6.7557 4.57833L7.8807 3.93145C9.00154 3.28395 10.123 2.63812 11.2451 1.99395C11.3476 1.9352 11.392 1.89395 11.3076 1.78333C11.2456 1.6903 11.1893 1.59367 11.1388 1.49395C11.002 1.25895 10.8757 1.2252 10.6388 1.36208L5.53008 4.30645L5.02008 4.60208ZM7.69383 4.60208L7.70383 4.63083C8.12008 4.63083 8.53633 4.63083 8.95383 4.63083C9.00968 4.62764 9.06355 4.60904 9.10945 4.57708C10.022 4.05124 10.9355 3.52583 11.8501 3.00083C11.9376 2.95083 11.9682 2.91458 11.9045 2.82083C11.8243 2.70355 11.7532 2.58027 11.692 2.45208C11.6407 2.3427 11.5932 2.35145 11.4988 2.40583C10.5213 2.97333 9.54279 3.53854 8.5632 4.10145C8.27154 4.26854 7.98174 4.43604 7.69383 4.60395V4.60208ZM10.0501 4.60208L10.0557 4.63395C10.9853 4.63395 11.9147 4.63395 12.8438 4.63395C12.9345 4.63395 12.9351 4.60708 12.8945 4.53833C12.7482 4.28833 12.6057 4.03833 12.4607 3.78833C12.3788 3.6477 12.3195 3.42708 12.2045 3.39208C12.0795 3.3527 11.9188 3.52458 11.7757 3.60645C11.1988 3.93833 10.6257 4.26895 10.0501 4.60145V4.60208Z"
+                                    fill="url(#paint0_linear_1777_13730)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_1777_13730" x1="12.6776" y1="1.72583" x2="4.2682"
+                                        y2="16.2921" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FF3269" />
+                                        <stop offset="1" stop-color="#FF794D" stop-opacity="0.8" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            Campaign Wallet
+                        </td>
+                    </tr>
+                    <tr>
+                        <div class="money">
+                            {{mine.acBalH| number:'1.2-2'}}
+                            <!-- 
+                                ₹ {{mine.acBalV| number:'12-2'}} -->
+                        </div>
+                        <div class="balance">
+                            Your Balance
+                        </div>
+                    </tr>
+                </table>
+                <div class="line"></div>
+                <div class="button_cont">
+                    <div>
+                    <button class="qrbutton" (click)="downloadV('svg')"><mat-icon>qr_code</mat-icon> POS</button>
+                    <button class="qrbutton" (click)="downloadB('svg')"><mat-icon>qr_code</mat-icon> INVOICE</button>
+                    </div>
+                    <!--span class="refil">Last refill: <span>8th July, 22 </span></span-->
+                    <span class="divide"></span>
+                    <button class="addbutton" mat-button (click)="addMoney()">
+                        Add Money
+                    </button>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div class="row">
-
-
-        <div class="col col-100 col-card">
-            <!--div class="shape c_persist"></div-->
-            <div class="card-box transactions textC">
+        <div class="col col-100">
+            <div class="card-box transactions">
                 <div class="boxHeader">
-                    <h4>Store Transactions</h4>
-                    <span class="divide"></span>
-                    <button mat-button>All<mat-icon>sort</mat-icon></button>
+                    <h4>Transactions</h4>
                 </div>
-
-                <!--div style="display: flex;">
-                    <h4>Transactions for location</h4>
-                    <span class="divide"></span>
-                    <button mat-button>Support<mat-icon>help</mat-icon></button>
-                </div-->
-                <div class="transactionList" *ngIf="payments$ | async as payments">
-                    <!--p style="padding: 0 !important;
-                    margin: 0 !important;
-                    font-size: 12px !important;" *ngFor="let x of payments">{{x | json}}<br><br></p-->
-
-                    <button mat-button class="transaction" *ngFor="let x of payments">
-                        <div class="b_persist textL transactionWraper">
-                            <p><span style="font-size: 12px;">{{x.sin?.toDate()|date:'dd, MMM, hh:mm'}}
-                                <span *ngIf="x.to == 'Δ'">Campaign Refill</span>
-                                <span *ngIf="x.journey == 'F2F'">F2F</span>
-                                <span *ngIf="x.journey == 'BURN'">BURN</span>
-                                <span *ngIf="x.journey == 'POS'">POS</span>
-                                <span *ngIf="x.journey == 'DIRECT'">Direct sale</span>
-                                <span *ngIf="false">Existing customer</span>
-                                <span *ngIf="false">New customer</span>
-                            </span><br>
-                                <img *ngIf="x.to == 'Δ'" src="assets/other/locate.svg" alt="Profile Picture">
-                                <img *ngIf="x.journey == 'POS' && themeService.colorScheme == 'dark' || x.journey == 'F2F' && themeService.colorScheme == 'dark' || x.journey == 'BURN' && themeService.colorScheme == 'dark' || x.journey == 'DIRECT' && themeService.colorScheme == 'dark' " [src]=" auth.resource.env.avatarW " alt="Profile Picture White">
-                                <img *ngIf="x.journey == 'POS' && themeService.colorScheme == 'light' || x.journey == 'F2F' && themeService.colorScheme == 'light' || x.journey == 'BURN' && themeService.colorScheme == 'light' || x.journey == 'DIRECT' && themeService.colorScheme == 'light'  " [src]="  auth.resource.env.avatarB " alt="Profile Picture Black">
-                                &nbsp;
-                                <span *ngIf="x.to == 'Δ' && false">Store Account</span>
-                                <span *ngIf="x.to == 'Δ' && false">XXX</span>
-                                <span *ngIf="x.to == 'Δ' && true">Refr Tech</span>
-                                <span *ngIf="false">Name</span>
-                                <span *ngIf="x.journey == 'POS' || x.journey == 'F2F' || x.journey == 'DIRECT' || x.journey == 'BURN'">{{x.userName}}</span>
-                                &nbsp;
-                                <span *ngIf="!x.status || x.status == 0" class="b_warn c_white" style="padding: 0 8px;" >Failed</span>
-                            </p>
-                            <span class="divide"></span>
-                            <p class="textR">
-                                <span class="c_red" *ngIf="x.journey == 'POS'">- ₹ {{x.earn|number:'1.2-2'}}</span>
-                                <span class="c_red" *ngIf="x.journey == 'F2F'">- ₹ {{x.earnTotal|number:'1.2-2'}}</span>
-                                <br>
-                                <span class="c_green" *ngIf="x.to == 'Δ' || x.journey == 'POS' || x.journey == 'F2F' || x.journey == 'BURN' || x.journey == 'DIRECT' ">₹ {{x.amTotal|number:'1.2-2'}}</span>
-                            </p>
-                        </div>
+                <div class="filter_btn_cont">
+                    <button mat-button (click)="activated = 1" [ngClass]="activated == 1 ? 'active' : ''">
+                        All
                     </button>
-                    <p class="textL" *ngIf="payments.length == 0">You have no transactions</p>
+                    <button mat-button (click)="activated = 2" [ngClass]="activated == 2 ? 'active' : ''">
+                        Store Wallet
+                    </button>
+                    <button mat-button (click)="activated = 3" [ngClass]="activated == 3 ? 'active' : ''">
+                        Campaign Wallet
+                    </button>
+                    <button mat-button (click)="activated = 4" [ngClass]="activated == 4 ? 'active' : ''">
+                        Burn
+                    </button>
                 </div>
 
-                <app-content *ngIf="!(payments$ | async)"></app-content>
+                <div *ngIf="payments$ | async as payments">
+                    <div *ngFor="let x of payments;let i = index">
+                        <div class="trans_card">
+                            <div class="dflex">
+                                <div *ngIf="x.to == 'Δ'">
+                                    Wallet refill
+                                </div>
+                                <div *ngIf="x.to != 'Δ'">
+                                    Payment recieved
+                                </div>
+                                <span class="divide"></span>
+                                <div class="tras_amt">
+                                    + {{x.amTotal | number:'1.0-2'}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="orderno" *ngIf="x.to != 'Δ'">
+                                    Order No : {{x.id}}
+                                </div>
+                                <div *ngIf="expandedindex === i">
+                                    <div>
+                                        <div class="t5padding">
+                                            <div *ngIf="x.journey=='BURN'">
+                                                Burn Sale
+                                            </div>
+                                            <div *ngIf="x.cart !=undefined && x.cart.length > 0">
+                                                Online Order
+                                            </div>
+                                            <div *ngIf="x.cart ==undefined || x.cart.length <= 0">
+                                                Offline Order
+                                            </div>
+                                        </div>
+                                        <div class="t5padding">Payment Method : 
+                                            <span *ngIf="x.ordrTYPE != 'RefrCASH+ONLINE' && x.ordrTYPE != 'RefrCASH+COD'">
+                                                <span *ngIf="x.ordrTYPE == 'CASH'">Cash</span>
+                                                <span *ngIf="x.ordrTYPE == 'ONLINE'">Online</span>
+                                                <span *ngIf="x.ordrTYPE == 'RefrCASH'">Refr Cash</span>
+                                                <span *ngIf="x.ordrTYPE == 'COD'">COD</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="x.invoice.useRefrCash == true && x.ordrTYPE != 'RefrCASH'">
+                                        <div class="refruser">Online :
+                                            ₹ {{x.amTotal - x.invoice.amtRefrCash | number:'1.0-2'}}
+                                        </div>
+                                        <div class="refruser">Refr Cash :
+                                            <svg width="18" height="18" viewBox="0 0 18 18" style="margin-bottom: -4px;"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.00026 15.0454C12.4543 15.0454 15.2544 12.2454 15.2544 8.79128C15.2544 5.3372 12.4543 2.53711 9.00026 2.53711C5.54618 2.53711 2.74609 5.3372 2.74609 8.79128C2.74609 12.2454 5.54618 15.0454 9.00026 15.0454Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M8.87299 13.6362C11.5373 13.6362 13.6972 11.4764 13.6972 8.81208C13.6972 6.14777 11.5373 3.98792 8.87299 3.98792C6.20868 3.98792 4.04883 6.14777 4.04883 8.81208C4.04883 11.4764 6.20868 13.6362 8.87299 13.6362Z"
+                                                    fill="#EFA900" />
+                                                <path d="M6.50336 6.77167H8.87253V12.5604L5.50586 8.37L6.50336 6.77167Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M11.5196 6.83752H9.15039V12.6267L12.5171 8.43586L11.5196 6.83752Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M6.50336 6.63165H8.87253V12.1637L5.50586 8.15915L6.50336 6.63165Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M11.4746 6.68292L9.10547 6.68334V12.2154L12.4721 8.21084L11.4746 6.68292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M10.2749 5.37292L9.28906 6.30418L11.2836 6.30709L10.2749 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M7.78466 5.37292L6.79883 6.30418L8.79341 6.30709L7.78466 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M10.2999 5.18292L9.31445 6.11417L11.3086 6.11709L10.2999 5.18292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M7.78466 5.18292L6.79883 6.11417L8.79341 6.11709L7.78466 5.18292Z"
+                                                    fill="#FECB00" />
+                                            </svg>
+                                            {{x.invoice.amtRefrCash | number:'1.0-2'}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dflex">
+                                    <div class="Tran_date">
+                                        {{x.sin.toDate() | date:'dd MMMM, hh:mm'}}
+                                    </div>
+                                    <span class="divide"></span>
+                                    <div>
+                                        <button (click)="expandedindex == i ? expandedindex = null : expandedindex = i;expandedchildindex = null" class="expandbtn" *ngIf="x.to != 'Δ'">
+                                            <mat-icon>
+                                                {{ expandedindex === i ? 'expand_less' : 'expand_more' }}
+                                            </mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trans_card" *ngIf="x.earn > 0">
+                            <div class="dflex">
+                                <div>
+                                    Cashback given
+                                </div>
+                                <span class="divide"></span>
+                                <div class="tras_amt">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-bottom: -4px;"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M9.00026 15.0454C12.4543 15.0454 15.2544 12.2454 15.2544 8.79128C15.2544 5.3372 12.4543 2.53711 9.00026 2.53711C5.54618 2.53711 2.74609 5.3372 2.74609 8.79128C2.74609 12.2454 5.54618 15.0454 9.00026 15.0454Z"
+                                        fill="#FECB00" />
+                                    <path
+                                        d="M8.87299 13.6362C11.5373 13.6362 13.6972 11.4764 13.6972 8.81208C13.6972 6.14777 11.5373 3.98792 8.87299 3.98792C6.20868 3.98792 4.04883 6.14777 4.04883 8.81208C4.04883 11.4764 6.20868 13.6362 8.87299 13.6362Z"
+                                        fill="#EFA900" />
+                                    <path d="M6.50336 6.77167H8.87253V12.5604L5.50586 8.37L6.50336 6.77167Z"
+                                        fill="#E19100" />
+                                    <path
+                                        d="M11.5196 6.83752H9.15039V12.6267L12.5171 8.43586L11.5196 6.83752Z"
+                                        fill="#E19100" />
+                                    <path
+                                        d="M6.50336 6.63165H8.87253V12.1637L5.50586 8.15915L6.50336 6.63165Z"
+                                        fill="#FECB00" />
+                                    <path
+                                        d="M11.4746 6.68292L9.10547 6.68334V12.2154L12.4721 8.21084L11.4746 6.68292Z"
+                                        fill="#FECB00" />
+                                    <path
+                                        d="M10.2749 5.37292L9.28906 6.30418L11.2836 6.30709L10.2749 5.37292Z"
+                                        fill="#E19100" />
+                                    <path
+                                        d="M7.78466 5.37292L6.79883 6.30418L8.79341 6.30709L7.78466 5.37292Z"
+                                        fill="#E19100" />
+                                    <path
+                                        d="M10.2999 5.18292L9.31445 6.11417L11.3086 6.11709L10.2999 5.18292Z"
+                                        fill="#FECB00" />
+                                    <path
+                                        d="M7.78466 5.18292L6.79883 6.11417L8.79341 6.11709L7.78466 5.18292Z"
+                                        fill="#FECB00" />
+                                </svg> -
+                                    <span *ngIf="x.earn != null && x.refr != null">
+                                        {{x.earn + x.refr.earn | number:'1.0-2'}}
+                                    </span>
+                                    <span *ngIf="x.earn != null && x.refr == null">
+                                        {{x.earn | number:'1.0-2'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="orderno" *ngIf="x.to != 'Δ'">
+                                    Order No : {{x.id}}
+                                </div>
+                                <div *ngIf="expandedchildindex === i">
+                                    <div *ngIf="x.earn != null && x.refr == null">
+                                        For Direct Sale
+                                    </div>
+                                    <div *ngIf="x.earn != null && x.refr !=null">
+                                        <div class="t5padding">For Sale via Recommendation :</div>
+                                        <div class="refruser">New customer
+                                            <svg width="18" height="18" viewBox="0 0 18 18" style="margin-bottom: -4px;"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.00026 15.0454C12.4543 15.0454 15.2544 12.2454 15.2544 8.79128C15.2544 5.3372 12.4543 2.53711 9.00026 2.53711C5.54618 2.53711 2.74609 5.3372 2.74609 8.79128C2.74609 12.2454 5.54618 15.0454 9.00026 15.0454Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M8.87299 13.6362C11.5373 13.6362 13.6972 11.4764 13.6972 8.81208C13.6972 6.14777 11.5373 3.98792 8.87299 3.98792C6.20868 3.98792 4.04883 6.14777 4.04883 8.81208C4.04883 11.4764 6.20868 13.6362 8.87299 13.6362Z"
+                                                    fill="#EFA900" />
+                                                <path d="M6.50336 6.77167H8.87253V12.5604L5.50586 8.37L6.50336 6.77167Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M11.5196 6.83752H9.15039V12.6267L12.5171 8.43586L11.5196 6.83752Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M6.50336 6.63165H8.87253V12.1637L5.50586 8.15915L6.50336 6.63165Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M11.4746 6.68292L9.10547 6.68334V12.2154L12.4721 8.21084L11.4746 6.68292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M10.2749 5.37292L9.28906 6.30418L11.2836 6.30709L10.2749 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M7.78466 5.37292L6.79883 6.30418L8.79341 6.30709L7.78466 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M10.2999 5.18292L9.31445 6.11417L11.3086 6.11709L10.2999 5.18292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M7.78466 5.18292L6.79883 6.11417L8.79341 6.11709L7.78466 5.18292Z"
+                                                    fill="#FECB00" />
+                                            </svg>
+                                            {{x.earn}}
+                                        </div>
+                                        <div class="refruser">Existing customer
+                                            <svg width="18" height="18" viewBox="0 0 18 18" style="margin-bottom: -4px;"
+                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.00026 15.0454C12.4543 15.0454 15.2544 12.2454 15.2544 8.79128C15.2544 5.3372 12.4543 2.53711 9.00026 2.53711C5.54618 2.53711 2.74609 5.3372 2.74609 8.79128C2.74609 12.2454 5.54618 15.0454 9.00026 15.0454Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M8.87299 13.6362C11.5373 13.6362 13.6972 11.4764 13.6972 8.81208C13.6972 6.14777 11.5373 3.98792 8.87299 3.98792C6.20868 3.98792 4.04883 6.14777 4.04883 8.81208C4.04883 11.4764 6.20868 13.6362 8.87299 13.6362Z"
+                                                    fill="#EFA900" />
+                                                <path d="M6.50336 6.77167H8.87253V12.5604L5.50586 8.37L6.50336 6.77167Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M11.5196 6.83752H9.15039V12.6267L12.5171 8.43586L11.5196 6.83752Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M6.50336 6.63165H8.87253V12.1637L5.50586 8.15915L6.50336 6.63165Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M11.4746 6.68292L9.10547 6.68334V12.2154L12.4721 8.21084L11.4746 6.68292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M10.2749 5.37292L9.28906 6.30418L11.2836 6.30709L10.2749 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M7.78466 5.37292L6.79883 6.30418L8.79341 6.30709L7.78466 5.37292Z"
+                                                    fill="#E19100" />
+                                                <path
+                                                    d="M10.2999 5.18292L9.31445 6.11417L11.3086 6.11709L10.2999 5.18292Z"
+                                                    fill="#FECB00" />
+                                                <path
+                                                    d="M7.78466 5.18292L6.79883 6.11417L8.79341 6.11709L7.78466 5.18292Z"
+                                                    fill="#FECB00" />
+                                            </svg>
+                                            {{x.refr.earn}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dflex">
+                                <div class="Tran_date">
+                                    {{x.sin.toDate() | date:'dd MMMM, hh:mm'}}
+                                </div>
+                                <span class="divide"></span>
+                                <div>
+                                    <button (click)="expandedchildindex == i ? expandedchildindex = null : expandedchildindex = i ;expandedindex = null" class="expandbtn" *ngIf="x.to != 'Δ'">
+                                        <mat-icon>
+                                            {{ expandedchildindex === i ? 'expand_less' : 'expand_more' }}
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
-
     </div>
-
-
 </div>

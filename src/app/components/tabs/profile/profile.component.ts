@@ -36,21 +36,15 @@ export class ProfileComponent implements OnInit {
   storeBannersList: string[] = [];
   store$: Observable<any> = of();
   dataCurrent:any;
+  typeORDER:any = null;
   listLoc:any[] = [];
-
   makingChanges = true;
-  userExist = true; userCheck = false;
 
-  phoneNumber = new PhoneNumber();
-  phoneNumFull:string = "";
-  verificationCode:string = "";
-  step = 0;
-  
-  storeLoc:any = {
+  storeLoc = {
+    storeType:"", 
     /*
     nationISO: "IND",
     stateISO: "",
-    storeType:"", 
     storeName:"", 
     fullname:"",//mine.name
     phone:"", // mine.phone ? mine.phone.split('+91')[1] : ''
@@ -75,15 +69,46 @@ export class ProfileComponent implements OnInit {
     openFri: true, openFriS:"07:00", openFriE:"23:00",
     openSat: true, openSatS:"07:00", openSatE:"23:00",
     openSun: false, openSunS:"07:00", openSunE:"23:00",
+    openBreak: false, openBreakS:"11:00", openBreakE:"15:00",
+
     delivery: "Citywide", logistics:false, 
     exchange: true, 
     return: true, 
     refund: true, 
+    phoneHide: true, 
     COD: true,
+
+    storeCat:"",
+    storeSubCat:""
   }
+
+
+
+
+  userExist = true; userCheck = false;
+
+  phoneNumber = new PhoneNumber();
+  phoneNumFull:string = "";
+  verificationCode:string = "";
+  step = 0;
+  
   disableLoc = true;
   imageLOADED: string[] = [];
 
+  viewPrimeUser = false;
+
+  // qrCodePOS:any = null;
+  // qrCodeInvoice:any = null;
+  // qrCodeSubs:any = null;
+
+  // showCode1 = false;
+  // showCode2 = false;
+  // showCode3 = false;
+  
+  // @ViewChild('canvasX1', { static: false }) canvasX1: ElementRef | undefined;
+  // @ViewChild('canvasX2', { static: false }) canvasX2: ElementRef | undefined;
+  // @ViewChild('canvasX3', { static: false }) canvasX3: ElementRef | undefined;
+  
   constructor(
     public themeService: ThemeService,
     public auth: AuthService
@@ -94,7 +119,9 @@ export class ProfileComponent implements OnInit {
     this.auth.user$.pipe(take(1)).subscribe(user => {
       const data = {
         //false, user.username, 
-        name: user.name || "", 
+        name: user.name || "",
+
+        soFB:user.soFB, 
         soIG:user.soIG, soYT:user.soYT, soTW:user.soTW, soWA:user.soWA,
         //user.info, user.url, user.typ, user.sex, user.stat, user.check, 
         uid: user.uid, iso: user.iso || "",
@@ -109,6 +136,100 @@ export class ProfileComponent implements OnInit {
   onloadIMG(url:string){
     this.imageLOADED.push(url);
   }
+
+  updateTiming(){
+    this.makingChanges = true;
+    const data = {
+      opensDaily: this.storeLoc.opensDaily, opensDailyS:this.storeLoc.opensDailyS, opensDailyE:this.storeLoc.opensDailyE,
+      openMon: this.storeLoc.openMon, openMonS:this.storeLoc.openMonS, openMonE:this.storeLoc.openMonE,
+      openTue: this.storeLoc.openTue, openTueS:this.storeLoc.openTueS, openTueE:this.storeLoc.openTueE,
+      openWed: this.storeLoc.openWed, openWedS:this.storeLoc.openWedS, openWedE:this.storeLoc.openWedE,
+      openThu: this.storeLoc.openThu, openThuS:this.storeLoc.openThuS, openThuE:this.storeLoc.openThuE,
+      openFri: this.storeLoc.openFri, openFriS:this.storeLoc.openFriS, openFriE:this.storeLoc.openFriE,
+      openSat: this.storeLoc.openSat, openSatS:this.storeLoc.openSatS, openSatE:this.storeLoc.openSatE,
+      openSun: this.storeLoc.openSun, openSunS:this.storeLoc.openSunS, openSunE:this.storeLoc.openSunE,
+      openBreak: (this.storeLoc.openBreak ? true : false), 
+      openBreakS: (this.storeLoc.openBreakS ? this.storeLoc.openBreakS : "11:00"), 
+      openBreakE: (this.storeLoc.openBreakE ? this.storeLoc.openBreakE : "15:00"),
+    }
+
+    this.auth.changeTimeData(this.storeID, data).then(() => {
+      this.makingChanges = false;
+    }).catch(err => {
+      this.makingChanges = false;
+      this.auth.resource.startSnackBar("Issue: " + err)
+      })
+
+  }
+
+  setUpTime(type:string, t:any){
+    console.log(type, t)
+    if(type == 'from'){
+      this.storeLoc.openMonS = t;
+      this.storeLoc.openTueS = t;
+      this.storeLoc.openWedS = t;
+      this.storeLoc.openThuS = t;
+      this.storeLoc.openFriS = t;
+      this.storeLoc.openSatS = t;
+      this.storeLoc.openSunS = t;
+    }
+    if(type == 'until'){
+      this.storeLoc.openMonE = t;
+      this.storeLoc.openTueE = t;
+      this.storeLoc.openWedE = t;
+      this.storeLoc.openThuE = t;
+      this.storeLoc.openFriE = t;
+      this.storeLoc.openSatE = t;
+      this.storeLoc.openSunE = t;
+    }
+  }
+
+  updateOrdr(type:string, current:any, val:any){
+    this.makingChanges = true;
+    console.log(type, current, val)
+    this.typeORDER[type] = val;
+
+    this.auth.updateStoreOrdr(this.storeID, this.typeORDER).then(() => {
+
+    if(type == 'delivery'){
+    this.storeLoc.delivery = val;
+    }
+    if(type == 'logistics'){
+    this.storeLoc.logistics = val;
+    }
+
+    if(type == 'exchange'){
+    this.storeLoc.exchange = val;
+    }
+    if(type == 'refund'){
+    this.storeLoc.refund = val;
+    }
+    if(type == 'phoneHide'){
+    this.storeLoc.phoneHide = val;
+    }
+    if(type == 'return'){
+    this.storeLoc.return = val;
+    }
+
+    if(type == 'COD'){
+    this.storeLoc.COD = val;
+    }
+
+    this.makingChanges = false;
+    }).catch(err => {
+    this.makingChanges = false;
+    this.typeORDER[type] = current;
+    this.auth.resource.startSnackBar("Issue: " + err)
+    })
+
+
+
+    // const xLoc = store.schedule;
+    // xLoc["delivery"] = store.typeORDER.delivery; xLoc["logistics"] = store.typeORDER.logistics;
+    // xLoc["exchange"] = store.typeORDER.exchange; xLoc["refund"] = store.typeORDER.refund; xLoc["return"] = store.typeORDER.return;
+    // xLoc["COD"] = store.typeORDER.COD;
+  }
+
 
   setContactNumber(){
     console.log(this.phoneNumFull)
@@ -147,19 +268,38 @@ export class ProfileComponent implements OnInit {
           this.storeName = store[0].name;
           this.storeLogo = store[0].logo;
           this.storeBanner = store[0].banner;
+
           if(store[0].banner.length > 0){
             this.storeBannersList = store[0].banners;
             this.storeBannersActive = store[0].banners[0];
           }
 
           this.listLoc = store[0].loc;
+          const xLoc = store[0].schedule;
+          
+          xLoc["logistics"] = store[0].typeORDER.logistics;
+          if(!xLoc["logistics"]["openBreak"]){
+          xLoc["logistics"]["openBreak"] = false;
+          xLoc["logistics"]["openBreakS"] = "11:00"; 
+          xLoc["logistics"]["openBreakE"] = "15:00";
+          }
+
+          xLoc["delivery"] = store[0].typeORDER.delivery; 
+          xLoc["exchange"] = store[0].typeORDER.exchange; xLoc["refund"] = store[0].typeORDER.refund; xLoc["return"] = store[0].typeORDER.return;
+
+          xLoc["phoneHide"] = store[0].typeORDER.phoneHide || false;
+
+          xLoc["COD"] = store[0].typeORDER.COD;
+          xLoc["storeType"] = store[0].type;
+          xLoc["storeCat"] = store[0].cat;
+          xLoc["storeSubCat"] = store[0].subCat;
+
+          this.storeLoc = xLoc;
+          this.typeORDER = store[0].typeORDER;
+
+
           this.store$ = of(store[0])
 
-          const xLoc = store[0].schedule;
-          xLoc["delivery"] = store[0].typeORDER.delivery; xLoc["logistics"] = store[0].typeORDER.logistics;
-          xLoc["exchange"] = store[0].typeORDER.exchange; xLoc["refund"] = store[0].typeORDER.refund; xLoc["return"] = store[0].typeORDER.return;
-          xLoc["COD"] = store[0].typeORDER.COD;
-          this.storeLoc = xLoc;
           /*
           opensDaily: true, opensDailyS:"07:00", opensDailyE:"23:00",
           openMon: true, openMonS:"07:00", openMonE:"23:00",
@@ -318,12 +458,14 @@ export class ProfileComponent implements OnInit {
 
       this.auth.updateUserBio(
         uid, this.dataCurrent.name, this.dataCurrent.name,
+        (type == "FB" ? info : this.dataCurrent.soFB),
         (type == "IG" ? info : this.dataCurrent.soIG),
         (type == "YT" ? info : this.dataCurrent.soYT),
         (type == "TW" ? info : this.dataCurrent.soTW),
         (type == "WA" ? info : this.dataCurrent.soWA),
         //this.dataCurrent.username, this.dataCurrent.info, this.dataCurrent.url, this.dataCurrent.typ, this.dataCurrent.sex, this.dataCurrent.stat 
         ).then(() => {
+          if( type == "FB" ){ this.dataCurrent.soFB = info }
           if( type == "IG" ){ this.dataCurrent.soIG = info }
           if( type == "YT" ){ this.dataCurrent.soYT = info }
           if( type == "TW" ){ this.dataCurrent.soTW = info }
@@ -350,6 +492,7 @@ export class ProfileComponent implements OnInit {
 
       this.auth.updateUserBio(
         uid, this.dataCurrent.name, newName,
+        this.dataCurrent.soFB, 
         this.dataCurrent.soIG, this.dataCurrent.soYT,this.dataCurrent.soTW,this.dataCurrent.soWA,
         //this.dataCurrent.username, this.dataCurrent.info, this.dataCurrent.url, this.dataCurrent.typ, this.dataCurrent.sex, this.dataCurrent.stat 
         ).then(() => {

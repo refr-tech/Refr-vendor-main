@@ -9,6 +9,8 @@ import { fromEvent, mapTo, merge, of } from 'rxjs';
 //import { Plugins } from '@capacitor/core';
 import { Network } from '@capacitor/network';
 
+import { Clipboard } from '@capacitor/clipboard';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,6 +38,8 @@ export class ResourceService {
 
     db:{
       categories: "cats",
+      inform: "inform",
+      contacts: "contacts",
       users: (!this.enablePRO ? "users" : "usersPRO"),
       shops: (!this.enablePRO ? "shops" : "shopsPRO"),
       hypes: (!this.enablePRO ? "hypes" : "hypesPRO"),
@@ -145,8 +149,21 @@ startSnackBar(mes:any){
 }
 
 copyClipboard(mes:string){
-  navigator.clipboard.writeText(mes);
-  this.startSnackBar("copied to your clipboard.")
+  if(this.appMode){
+    const writeToClipboard = async () => {
+      await Clipboard.write({
+        string: mes
+      });
+    };
+
+    writeToClipboard().then(() => {
+      this.startSnackBar("copied to your clipboard.")
+    })
+  }else{
+    navigator.clipboard.writeText(mes).then(() => {
+      this.startSnackBar("copied to your clipboard.")
+    });
+  }
 }
 
 compareDates(date1:any){
@@ -228,5 +245,7 @@ async internetConnected(){
     return x;
   }
 }
+
+
 
 }

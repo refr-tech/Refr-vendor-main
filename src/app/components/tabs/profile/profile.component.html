@@ -413,8 +413,8 @@
             </tr>
             <tr>
               <td colspan="3">
-                <button mat-button color="primary" [disabled]="disableLoc" (click)="storeLoc.delivery = 'Citywide'"><mat-icon>{{storeLoc.delivery == 'Citywide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Citywide</button>
-                <button mat-button color="primary" [disabled]="disableLoc" (click)="storeLoc.delivery = 'Nationwide'"><mat-icon>{{storeLoc.delivery == 'Nationwide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Nationwide</button>
+                <button mat-button color="primary" [disabled]="makingChanges" (click)=" updateOrdr( 'delivery', storeLoc.delivery, 'Citywide'  ) "><mat-icon>{{storeLoc.delivery == 'Citywide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Citywide</button>
+                <button mat-button color="primary" [disabled]="makingChanges" (click)=" updateOrdr( 'delivery',  storeLoc.delivery, 'Nationwide' ) "><mat-icon>{{storeLoc.delivery == 'Nationwide' ? 'check_box':'check_box_outline_blank'}}</mat-icon> Nationwide</button>
               </td>
             </tr>
 
@@ -424,7 +424,7 @@
             <tr style="font-size: 14px;">
               <td colspan="2">Cash On Delivery</td>
               <td class="textR">
-                <mat-slide-toggle color="primary" [disabled]="disableLoc"
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'COD',  storeLoc.COD, !storeLoc.COD ) "
                 labelPosition="before" [(ngModel)]="storeLoc.COD" name="COD">{{storeLoc.COD ? 'Yes':'No'}}</mat-slide-toggle>
               </td>
             </tr>
@@ -432,32 +432,41 @@
             <tr style="font-size: 14px;">
               <td colspan="2">Return</td>
               <td class="textR">
-                <mat-slide-toggle color="primary" [disabled]="disableLoc"
+                <mat-slide-toggle color="primary" [disabled]="disableLoc" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'return',  storeLoc.return, !storeLoc.return ) "
                 labelPosition="before" [(ngModel)]="storeLoc.return" name="return">{{storeLoc.return ? 'Yes':'No'}}</mat-slide-toggle>
               </td>
             </tr>
             <tr style="font-size: 14px;">
               <td colspan="2">Exchange</td>
               <td class="textR">
-                <mat-slide-toggle color="primary" [disabled]="disableLoc" 
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'exchange',  storeLoc.exchange, !storeLoc.exchange ) "
                 labelPosition="before" [(ngModel)]="storeLoc.exchange" name="exchange">{{storeLoc.exchange ? 'Yes':'No'}}</mat-slide-toggle>
               </td>
             </tr>
             <tr style="font-size: 14px;">
               <td colspan="2">Refund</td>
               <td class="textR">
-                <mat-slide-toggle color="primary" [disabled]="disableLoc" 
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'refund',  storeLoc.refund, !storeLoc.refund ) " 
                 labelPosition="before" [(ngModel)]="storeLoc.refund" name="refund">{{storeLoc.refund ? 'Yes':'No'}}</mat-slide-toggle>
               </td>
             </tr>
+
+            <tr style="font-size: 14px;">
+              <td colspan="2">Hide Phone Number</td>
+              <td class="textR">
+                <mat-slide-toggle color="primary" [disabled]="makingChanges" (toggleChange)=" updateOrdr( 'phoneHide',  storeLoc.phoneHide, !storeLoc.phoneHide ) " 
+                labelPosition="before" [(ngModel)]="storeLoc.phoneHide" name="phoneHide">{{storeLoc.phoneHide ? 'Yes':'No'}}</mat-slide-toggle>
+              </td>
+            </tr>
+            
 
             <tr>
               <td colspan="3">Require logistics partner</td>
             </tr>
             <tr>
               <td colspan="3">
-                <button mat-button color="primary" [disabled]="disableLoc" (click)="storeLoc.logistics = !storeLoc.logistics"><mat-icon>{{storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> Yes, provide me with one.</button>
-                <button mat-button color="primary" [disabled]="disableLoc" (click)="storeLoc.logistics = !storeLoc.logistics"><mat-icon>{{!storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> No, we have our logistics network.</button>
+                <button mat-button color="primary" [disabled]="makingChanges"  (click)=" updateOrdr( 'logistics', storeLoc.logistics, !storeLoc.logistics  ) "><mat-icon>{{storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> Yes, provide me with one.</button>
+                <button mat-button color="primary" [disabled]="makingChanges"  (click)=" updateOrdr( 'logistics', storeLoc.logistics, !storeLoc.logistics  ) "><mat-icon>{{!storeLoc.logistics ? 'check_box':'check_box_outline_blank'}}</mat-icon> No, we have our logistics network.</button>
               </td>
             </tr>
   </ng-container>
@@ -466,168 +475,207 @@
             <tr>
               <td colspan="3">Set opening hours</td>
             </tr>
-            <tr>
-              <td [attr.colspan]="storeLoc.opensDaily ? 1 : 3"><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.opensDaily" name="daily">{{storeLoc.opensDaily ? 'Daily':'Choose by Weekdays'}}</mat-slide-toggle></td>
+
+
+
+
+
+
+            <tr class="dateEditor">
+              <td [attr.colspan]="storeLoc.opensDaily ? 1 : 3"><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.opensDaily" name="daily">{{storeLoc.opensDaily ? 'Daily':'Choose by Weekdays'}}</mat-slide-toggle></td>
               <td *ngIf="storeLoc.opensDaily">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
-                  matInput [(ngModel)]="storeLoc.opensDailyS" name="opensDailyS" placeholder="07:00 AM" autocomplete="off" type="time" required>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.opensDailyS" (change)="setUpTime('from', storeLoc.opensDailyS)" name="opensDailyS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
               <td *ngIf="storeLoc.opensDaily">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
-                  matInput [(ngModel)]="storeLoc.opensDailyE" name="opensDailyE" placeholder="11:00 PM" autocomplete="off" type="time" required>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.opensDailyE" (change)="setUpTime('until', storeLoc.opensDailyE)" name="opensDailyE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-  </ng-container>
 
 
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openMon" name="monday">MON</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openMon" name="monday">MON</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openMon" colspan="2">Closed</td>
               <td *ngIf="storeLoc.openMon">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges"
                   matInput [(ngModel)]="storeLoc.openMonS" name="openMonS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openMon">
+              <td *ngIf="storeLoc.openMon" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openMonE" name="openMonE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openTue" name="tuesday">TUE</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openTue" name="tuesday">TUE</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openTue" colspan="2">Closed</td>
               <td *ngIf="storeLoc.openTue">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openTueS" name="openTueS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openTue">
+              <td *ngIf="storeLoc.openTue" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openTueE" name="openTueE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openWed" name="wednesday">WED</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openWed" name="wednesday">WED</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openWed" colspan="2">Closed</td>
               <td *ngIf="storeLoc.openWed">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openWedS" name="openWedS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openWed">
+              <td *ngIf="storeLoc.openWed" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openWedE" name="openWedE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openThu" name="thursday">THU</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openThu" name="thursday">THU</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openThu" colspan="2" >Closed</td>
               <td *ngIf="storeLoc.openThu">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openThuS" name="openThuS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openThu">
+              <td *ngIf="storeLoc.openThu" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openThuE" name="openThuE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openFri" name="friday">FRI</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openFri" name="friday">FRI</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openFri" colspan="2" >Closed</td>
               <td *ngIf="storeLoc.openFri">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openFriS" name="openFriS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openFri">
+              <td *ngIf="storeLoc.openFri" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openFriE" name="openFriE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openSat" name="saturday">SAT</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openSat" name="saturday">SAT</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openSat" colspan="2" >Closed</td>
               <td *ngIf="storeLoc.openSat">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges"
                   matInput [(ngModel)]="storeLoc.openSatS" name="openSatS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openSat">
+              <td *ngIf="storeLoc.openSat" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openSatE" name="openSatE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr *ngIf="!storeLoc.opensDaily">
-              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="disableLoc" [(ngModel)]="storeLoc.openSun" name="sunday">SUN</mat-slide-toggle></td>
+            <tr *ngIf="!storeLoc.opensDaily" class="dateEditor">
+              <td><mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openSun" name="sunday">SUN</mat-slide-toggle></td>
               <td *ngIf="!storeLoc.openSun" colspan="2" >Closed</td>
               <td *ngIf="storeLoc.openSun">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>From</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openSunS" name="openSunS" placeholder="07:00 AM" autocomplete="off" type="time" required>
                   <mat-error>from is required.</mat-error>
                 </mat-form-field>
               </td>
-              <td *ngIf="storeLoc.openSun">
+              <td *ngIf="storeLoc.openSun" class="dateEditor">
                 <mat-form-field appearance="legacy" class="fullWidth">
                   <mat-label>Until</mat-label>
-                  <input [disabled]="makingChanges || disableLoc"
+                  <input [disabled]="makingChanges "
                   matInput [(ngModel)]="storeLoc.openSunE" name="openSunE" placeholder="11:00 PM" autocomplete="off" type="time" required>
                   <mat-error>until is required.</mat-error>
                 </mat-form-field>
               </td>
             </tr>
+
+
+
+            <tr class="dateEditor">
+              <td [attr.colspan]="storeLoc.openBreak ? 1 : 3">
+                <mat-slide-toggle class="togglePad" color="primary" [disabled]="makingChanges" [(ngModel)]="storeLoc.openBreak" name="offTime">Break Time</mat-slide-toggle>
+              </td>
+              <td *ngIf="storeLoc.openBreak">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>From</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openBreakS" (change)="setUpTime('from', storeLoc.openBreakS)" name="openBreakS" placeholder="11:00 AM" autocomplete="off" type="time" required>
+                  <mat-error>from is required.</mat-error>
+                </mat-form-field>
+              </td>
+              <td *ngIf="storeLoc.openBreak">
+                <mat-form-field appearance="legacy" class="fullWidth">
+                  <mat-label>Until</mat-label>
+                  <input [disabled]="makingChanges "
+                  matInput [(ngModel)]="storeLoc.openBreakE" (change)="setUpTime('until', storeLoc.openBreakE)" name="openBreakE" placeholder="04:00 PM" autocomplete="off" type="time" required>
+                  <mat-error>until is required.</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td colspan="3">
+                <button mat-button [disabled]="makingChanges" (click)="updateTiming()">Update Timings</button>
+              </td>
+            </tr>
+
+  </ng-container>
+
 
         </table>
         </div>
@@ -656,7 +704,7 @@
             <mat-label>Address {{i+1}}</mat-label>
             <input matInput placeholder="Location name" [value]="loc.line1" readonly>
             <span matPrefix style="vertical-align: middle;"><mat-icon>map</mat-icon>&nbsp;</span>
-            <button mat-icon-button matSuffix><mat-icon>more_vert</mat-icon></button>
+            <button mat-icon-button matSuffix><mat-icon>delete</mat-icon></button>
             <mat-hint align="end">{{loc.city}}, {{loc.zip}}</mat-hint>
           </mat-form-field>
         </form>
@@ -684,6 +732,17 @@
       <div class="container-next b_persist c_invert">
 
         <h3>Social media</h3>
+
+        <form (submit)="updateSocial(mine.uid, 'FB', facebook.value)" >
+        <mat-form-field appearance="legacy" class="fullWidth">
+          <input matInput [value]="dataCurrent.soFB" placeholder="facebook page" #facebook>
+          <mat-icon matPrefix><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="f_invert iconSocial">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg></mat-icon>
+          <span matPrefix>facebook.com/</span>
+          <button mat-icon-button matSuffix [disabled]=" makingChanges || dataCurrent.soFB == facebook.value "><mat-icon matSuffix>{{dataCurrent.soFB == facebook.value ? 'edit':'save'}}</mat-icon></button>
+        </mat-form-field>
+        </form>
 
         <form (submit)="updateSocial(mine.uid, 'IG', insta.value)">
         <mat-form-field appearance="legacy" class="fullWidth">
@@ -728,6 +787,7 @@
           <button mat-icon-button matSuffix [disabled]=" makingChanges || dataCurrent.soWA == whatsup.value "><mat-icon matSuffix>{{dataCurrent.soWA == whatsup.value ? 'edit':'save'}}</mat-icon></button>
         </mat-form-field>
         </form>
+
 
       </div>
     </div>

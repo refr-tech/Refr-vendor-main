@@ -18,10 +18,10 @@ export class ThemeService {
       // Detect if prefers-color-scheme is supported
       if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
           // Set colorScheme to Dark if prefers-color-scheme is dark. Otherwise, set it to Light.
-          this.colorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          this.colorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'light';
       } else {
           // If the browser does not support prefers-color-scheme, set the default to dark.
-          this.colorScheme = 'dark';
+          this.colorScheme = 'light';
       }
   }
 
@@ -51,7 +51,7 @@ export class ThemeService {
   update(scheme: string) {
       this._setColorScheme(scheme);
       // Remove the old color-scheme class
-      this.renderer.removeClass(document.body, this.colorSchemePrefix + (this.colorScheme === 'dark' ? 'light' : 'dark'));
+      this.renderer.removeClass(document.body, this.colorSchemePrefix + (this.colorScheme === 'dark' ? 'light' : 'light'));
       // Add the new / current color-scheme class
       this.renderer.addClass(document.body, this.colorSchemePrefix + scheme);
   }

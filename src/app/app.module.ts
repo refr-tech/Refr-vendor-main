@@ -59,6 +59,7 @@ import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 
 import { indexedDBLocalPersistence, browserPopupRedirectResolver } from 'firebase/auth';
 
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 // 1. Import the libs you need
 // import { AngularFireModule } from '@angular/fire/compat';
 // import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -83,6 +84,11 @@ import { CropperComponent } from './placeholders/cropper/cropper.component';
 import { UploadProductComponent } from './components/tabs/list-product/upload-product/upload-product.component';
 import { OrdrPlacedComponent } from './components/store-create/ordr-placed/ordr-placed.component';
 import { PlanBalanceComponent } from './components/tabs/wallet/plan-balance/plan-balance.component';
+import { ShareAdvocacyComponent } from './components/tabs/dashboard/share-advocacy/share-advocacy.component';
+import { ShareLoyaltyComponent } from './components/tabs/dashboard/share-loyalty/share-loyalty.component';
+import { OrdrShipComponent } from './components/tabs/list-order/ordr-ship/ordr-ship.component';
+import { OrdrTrackComponent } from './components/tabs/list-order/ordr-track/ordr-track.component';
+import { NewCustomerComponent } from './components/tabs/customer/new-customer/new-customer.component';
 
 // import { Capacitor } from '@capacitor/core';
 // import { getApp } from '@firebase/app';
@@ -103,7 +109,7 @@ import { PlanBalanceComponent } from './components/tabs/wallet/plan-balance/plan
     StoreCreateComponent,
     CropperComponent,
     NewStoreComponent, BottomSheetOTP, NewLocationComponent, NewCampaignComponent, FundWalletComponent, AddProductComponent, PayComponent, ListOrderComponent, ListProductComponent, 
-    AddBalanceComponent, UploadProductComponent, OrdrPlacedComponent, PlanBalanceComponent,
+    AddBalanceComponent, UploadProductComponent, OrdrPlacedComponent, PlanBalanceComponent, ShareAdvocacyComponent, ShareLoyaltyComponent, OrdrShipComponent, OrdrTrackComponent, NewCustomerComponent,
   ],
   imports: [
     BrowserModule, CommonModule,
@@ -168,6 +174,7 @@ import { PlanBalanceComponent } from './components/tabs/wallet/plan-balance/plan
       provide: MatDialogRef,
       useValue: {}
     },
+    SocialSharing, 
   ],
   bootstrap: [AppComponent]
 })

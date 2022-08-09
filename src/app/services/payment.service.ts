@@ -245,7 +245,9 @@ export class PaymentService {
   getAllPayments(uid:string, s:number, type:string[]){
     const catData = collection(this.firestore, `${this.gWay}`)
     const qu = query(catData, 
-      where("by","==",uid), 
+      where("type","array-contains", uid ), 
+      //where("by","==",uid), 
+      //orderBy("sin", "desc"), 
       orderBy("com", "desc"), 
       limit(s));
     return collectionData( qu );
@@ -379,11 +381,23 @@ export class PaymentService {
       })
   }
 
-  changeStatusOnlineF2F(id:string, status:number, loStatus:any){
+  changeStatusOnlineStore(id:string, status:number, loStatus:any){
     const newTimestamp = this.getServerTimestamp();
     const gWayRef = doc(this.firestore,`${this.gWay}`, `${id}`)
     return updateDoc(gWayRef, {
-      status:status, logistics:loStatus, com:newTimestamp
+      status:status, logistics:loStatus, 
+      com:newTimestamp
+      //done:newTimestamp
+    })
+  }
+
+  changeStatusOnlineStoreBURN(id:string, status:number, loStatus:any){
+    const newTimestamp = this.getServerTimestamp();
+    const gWayRef = doc(this.firestore,`${this.gWay}`, `${id}`)
+    return updateDoc(gWayRef, {
+      status:status, logistics:loStatus, 
+      com:newTimestamp
+      //done:newTimestamp
     })
   }
 
@@ -405,20 +419,49 @@ export class PaymentService {
     })
   }
 
-  transferDeliveredF2F(ordrId:string, newLO:number, uidC:string, uidR:string, amtC:number, amtR:number){
+  changeRefundOnlineBURN(id:string, status:number, loStatus:any, razorRef:any ){
+    const newTimestamp = this.getServerTimestamp();
+    const gWayRef = doc(this.firestore,`${this.gWay}`, `${id}`)
+    return updateDoc(gWayRef, {
+      gwRefund: arrayUnion(razorRef),
+      status:status, logistics:loStatus, com:newTimestamp
+    })
+  }
+
+  transferDeliveredF2F(sid:string, ordrId:string, newLO:number, uidC:string, uidR:string, amtC:number, amtR:number){
     //const vendorRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidV}`);
     const clientRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidC}`);
     const clientRefVia = doc(this.firestore, `${this.resource.env.db.users}`, `${uidR}`);
     //const storeRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${sid}`);
 
-    return updateDoc(clientRef, { acBalC: increment(amtC), acBalCr: increment(-amtC) }).then(() => {// purchased by
-      return updateDoc(clientRefVia, { acBalC: increment(amtR), acBalCr: increment(-amtR) }).then(() => { // refered by
-        return this.changeStatusOnlineF2F(ordrId, 10, newLO)
+    const newTimestamp = this.getServerTimestamp();
+    const informRefC = collection(this.firestore, `${this.resource.env.db.inform}`,);
+
+    const dataSend = {
+      id:"",
+      by:uidC,
+      sid:sid,
+      sin: newTimestamp,
+      status: true,
+      walt:ordrId,
+      about: "Waiting for 14 days", //"done 14 days",
+      what:"O-LINK", type:"F2F"
+    }
+
+    // CREATE 
+    return addDoc(informRefC, dataSend).then(informRef => {// purchased by
+      const informDoc = doc(this.firestore,`${this.resource.env.db.inform}`, `${informRef.id}`)
+      return updateDoc(informDoc, {id:informRef.id}).then(() => {
+    //return updateDoc(clientRef, { acBalC: increment(amtC), acBalCr: increment(-amtC) }).then(() => {// purchased by
+      //return updateDoc(clientRefVia, { acBalC: increment(amtR), acBalCr: increment(-amtR) }).then(() => { // refered by
+        return this.changeStatusOnlineStore(ordrId, 10, newLO)
+      //})
+    //})
       })
     })
   }
 
-  transferDeliveredDIRECT(ordrId:string, newLO:number, uidC:string, //uidR:string, 
+  transferDeliveredDIRECT(sid:string, ordrId:string, newLO:number, uidC:string, //uidR:string, 
     amtC:number //, amtR:number
     ){
     //const vendorRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidV}`);
@@ -426,11 +469,64 @@ export class PaymentService {
     //const clientRefVia = doc(this.firestore, `${this.resource.env.db.users}`, `${uidR}`);
     //const storeRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${sid}`);
 
-    return updateDoc(clientRef, { acBalC: increment(amtC), acBalCr: increment(-amtC) }).then(() => {// purchased by
-      //return updateDoc(clientRefVia, { acBalC: increment(amtR), acBalCr: increment(-amtR) }).then(() => { // refered by
-        return this.changeStatusOnlineF2F(ordrId, 10, newLO)
-      //})
+    const newTimestamp = this.getServerTimestamp();
+    const informRefC = collection(this.firestore, `${this.resource.env.db.inform}`,);
+
+    const dataSend = {
+      id:"",
+      by:uidC,
+      sid:sid,
+      sin: newTimestamp,
+      status: true,
+      walt:ordrId,
+      about: "Waiting for 14 days", //"done 14 days",
+      what:"O-LINK", type:"DIRECT"
+    }
+    console.log("dataSend", dataSend)
+
+    // CREATE 
+    return addDoc(informRefC, dataSend).then(informRef => {// purchased by
+      const informDoc = doc(this.firestore,`${this.resource.env.db.inform}`, `${informRef.id}`)
+      return updateDoc(informDoc, {id:informRef.id}).then(() => {
+    //return updateDoc(clientRef, { acBalC: increment(amtC), acBalCr: increment(-amtC) }).then(() => {// purchased by
+        return this.changeStatusOnlineStore(ordrId, 10, newLO)
+    //})
+      })
     })
+  }
+
+  transferDeliveredBURN(sid:string, ordrId:string, newLO:number, uidC:string, //uidR:string, 
+    amtC:number //, amtR:number
+    ){
+    //const vendorRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidV}`);
+    const clientRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidC}`);
+    //const clientRefVia = doc(this.firestore, `${this.resource.env.db.users}`, `${uidR}`);
+    //const storeRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${sid}`);
+
+    const newTimestamp = this.getServerTimestamp();
+    const informRefC = collection(this.firestore, `${this.resource.env.db.inform}`,);
+
+    // const dataSend = {
+    //   id:"",
+    //   by:uidC,
+    //   sid:sid,
+    //   sin: newTimestamp,
+    //   status: true,
+    //   walt:ordrId,
+    //   about: "Waiting for 14 days", //"done 14 days",
+    //   what:"O-LINK", type:"DIRECT"
+    // }
+    // console.log("dataSend", dataSend)
+
+    // CREATE 
+    //return addDoc(informRefC, dataSend).then(informRef => {// purchased by
+      //const informDoc = doc(this.firestore,`${this.resource.env.db.inform}`, `${informRef.id}`)
+      //return updateDoc(informDoc, {id:informRef.id}).then(() => {
+    //return updateDoc(clientRef, { acBalC: increment(amtC), acBalCr: increment(-amtC) }).then(() => {// purchased by
+        return this.changeStatusOnlineStoreBURN(ordrId, 10, newLO)
+    //})
+      //})
+    //})
   }
 
   transferRefundF2F(
@@ -492,7 +588,7 @@ export class PaymentService {
     /*
     return updateDoc(clientRef, { acBalCr: increment(-amtC) }).then(() => {// purchased by
       return updateDoc(clientRefVia, { acBalCr: increment(-amtR) }).then(() => { // refered by
-        return this.changeStatusOnlineF2F(ordrId, -10, newLO)
+        return this.changeStatusOnlineStore(ordrId, -10, newLO)
       })
     })
     */
@@ -557,10 +653,94 @@ export class PaymentService {
     /*
     return updateDoc(clientRef, { acBalCr: increment(-amtC) }).then(() => {// purchased by
       return updateDoc(clientRefVia, { acBalCr: increment(-amtR) }).then(() => { // refered by
-        return this.changeStatusOnlineF2F(ordrId, -10, newLO)
+        return this.changeStatusOnlineStore(ordrId, -10, newLO)
       })
     })
     */
+  }
+
+  transferRefundBURN(
+    sid:string, uidV:string, uidC:string, //uidR:string, 
+    costUSER:number, transferRefrCash:number //, cashback:number, referalCashback:number
+    //earnTotal:number, iEarn:number, refEarn:number, amTotal:number, vFan:number
+    //ordrId:string, newLO:number, uidC:string, uidR:string, amtC:number, amtR:number
+    ){
+
+    const vendorRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidV}`);
+    const clientRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uidC}`);
+    //const clientRefVia = doc(this.firestore, `${this.resource.env.db.users}`, `${uidR}`);
+    //const storeRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${sid}`);
+
+    return updateDoc(vendorRef, { acBalVr: increment(-costUSER)/*, acBalH: increment(cashback + referalCashback)*/ }).then(() => {// deduct cost in reserve & return cashback given to both
+    return updateDoc(clientRef, { acBalC:increment(transferRefrCash)/*, acBalCr:increment(-cashback)*/ }).then(() => { // return refrcash to user
+        //return updateDoc(clientRefVia, { acBalCr:increment(-referalCashback) }).then(() => { // return refrcash to user
+          return {success:true}
+        //})
+      })
+        //this.pay.updateClientF2F_ONLINE( uid, -transferRefrCash ) 
+
+    })
+
+      // //if( journey == "F2F_ONLINE" ){
+      //   this.pay.updateVendorReserveF2F_ONLINE( mid, costUSER ) // added to vender reserve
+      //   //if(ordrTYPE == "COD" || ordrTYPE == "RefrCASH" || ordrTYPE == "RefrCASH+COD" ){ console.log("Add amount to pending in vendor as to be collected.") }
+      //   //if(ordrTYPE == "ONLINE" || ordrTYPE == "RefrCASH+ONLINE"){ console.log("Add amount to pending in vendor as paid.") }
+
+      //   if(ordrTYPE == "RefrCASH" || ordrTYPE == "RefrCASH+COD" || ordrTYPE == "RefrCASH+ONLINE" ){
+      //     this.pay.updateClientF2F_ONLINE( uid, -transferRefrCash ) // deduct from refrcash
+      //     //console.log("Deduct amount from user refrcash.")
+      //   }
+      //   if(cashback > 0){// when cashback has to be given
+      //     this.pay.updateVendorHypeF2F_ONLINE( mid, -(cashback + referalCashback) )
+      //     this.pay.updateClientReserveF2F_ONLINE( uid, cashback )
+      //     if(referalCODE){
+      //     this.pay.updateClientReserveF2F_ONLINE( referalUID, referalCashback )
+      //     }
+      //   //}
+      // }
+/*
+
+    return updateDoc(vendorRef, {acBalH: increment(-earnTotal) }).then(() => {
+      return updateDoc(clientRef, {acBalC: increment(iEarn) }).then(() => {// purchased by
+        return updateDoc(clientRefVia, {acBalC: increment(refEarn) }).then(() => { // refered by
+          return updateDoc(storeRef, {
+            vEarn: increment(amTotal),
+            vGave: increment(earnTotal),
+            vFan: increment(vFan),
+            vOrdr: increment(1),
+          }).then(() => {
+            return {success:true }
+          });
+        });
+      });
+    });
+*/
+    /*
+    return updateDoc(clientRef, { acBalCr: increment(-amtC) }).then(() => {// purchased by
+      return updateDoc(clientRefVia, { acBalCr: increment(-amtR) }).then(() => { // refered by
+        return this.changeStatusOnlineStore(ordrId, -10, newLO)
+      })
+    })
+    */
+  }
+
+  startShiping(id:string, shipData:any){
+    const newTimestamp = this.getServerTimestamp();
+    const gWayRef = doc(this.firestore,`${this.gWay}`, `${id}`)
+    return updateDoc(gWayRef, {
+      shipCreate: shipData,
+      shipUpdate:null, 
+      ship:newTimestamp
+    })
+  }
+
+  updateShiping(id:string, shipData:any){
+    const newTimestamp = this.getServerTimestamp();
+    const gWayRef = doc(this.firestore,`${this.gWay}`, `${id}`)
+    return updateDoc(gWayRef, {
+      shipUpdate:shipData, 
+      ship:newTimestamp
+    })
   }
 
 }

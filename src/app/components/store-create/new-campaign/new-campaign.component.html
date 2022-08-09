@@ -180,7 +180,7 @@
               <td class="textR"><button mat-raised-button color="primary" 
                 [disabled]="disableForm || 
                 storeCamp.cbNew > t.refill ||
-                storeCamp.type !== 'percent' && storeCamp.max > t.refill " (click)="createStoreCampaign( ('t' + (i+1)) )">Pay</button></td>
+                storeCamp.type !== 'percent' && storeCamp.max > t.refill " (click)="createStoreCampaign( ('t' + (i+1)), false )">Pay</button></td>
           </tr>
 
 </ng-container>
@@ -192,12 +192,16 @@
               <td colspan="3"><input class="b_persist c_invert" [(ngModel)]="payCustom" min="1" placeholder="Negotiated amount" type="number" name="customPack">
                   <!--p>₹ {{100}}<br><span style="font-size: 12px;">You get ₹ {{99}}</span></p-->
               </td>
-              <td class="textR"><button mat-stroked-button color="primary" [disabled]="disableForm || !payCustom" (click)="createStoreCampaign( 'tC' )">Apply</button></td>
+              <td class="textR"><button mat-stroked-button color="primary" [disabled]="disableForm || !payCustom" (click)="createStoreCampaign( 'tC', false )">Apply</button></td>
           </tr>
 
           <tr class="c_persist"><td colspan="4" style="padding: 30px 0 0 0 !important;">
               <a mat-raised-button routerLink="/store/add-product" class="c_invert" *ngIf="!enableDirect">Create Later</a>
+              <div style="display: flex; margin: 0 16px; " *ngIf="enableDirect">
               <a mat-raised-button class="c_invert" mat-dialog-close *ngIf="enableDirect">Create Later</a>
+              <span class="divide"></span>
+              <a mat-raised-button class="c_invert" *ngIf="enableDirect" (click)="createStoreCampaign( ('t' + (0+1)) , true )">Just Create</a>
+              </div>
           </td></tr>
       </table>
     

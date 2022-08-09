@@ -22,7 +22,8 @@ export class WalletComponent implements OnInit, AfterViewInit {
   userID = "";
   storeID = "";
   userData:User | undefined;
-  qrCode:any = null;
+  qrCodeV1:any = null;
+  qrCodeB1:any = null;
   showCode = false;
 
   store$: Observable<any> = of();
@@ -33,6 +34,16 @@ export class WalletComponent implements OnInit, AfterViewInit {
   shareUrlX1 = "";
 
   customRate = 0;
+
+
+
+
+
+  activated: number = 1;
+  expandedindex: any = null;
+  expandedchildindex: any = null;
+  
+
 
   constructor(
     public themeService: ThemeService,
@@ -82,9 +93,14 @@ export class WalletComponent implements OnInit, AfterViewInit {
     //this.extension = event.target.value;
   //}
 
-  download(extension:string): void {
+  downloadV(extension:string): void {
     if(extension){
-      this.qrCode.download({ extension: extension as Extension });
+      this.qrCodeV1.download({ extension: extension as Extension });
+    }
+  }
+  downloadB(extension:string): void {
+    if(extension){
+      this.qrCodeB1.download({ extension: extension as Extension });
     }
   }
 
@@ -105,7 +121,7 @@ export class WalletComponent implements OnInit, AfterViewInit {
 
 
 
-    this.qrCode = new QRCodeStyling({
+    this.qrCodeV1 = new QRCodeStyling({
       width: 200,
       height: 200,
       type: 'svg',
@@ -160,9 +176,64 @@ export class WalletComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.qrCodeB1 = new QRCodeStyling({
+      width: 200,
+      height: 200,
+      type: 'svg',
+      data: this.shareUrlB1,
+      image: 'https://firebasestorage.googleapis.com/v0/b/refr/o/locate.svg?alt=media&token=e23de5bd-4a26-4a9e-bb63-bc9e3a87b29c',
+      margin: 0,
+      qrOptions: {
+        typeNumber: 0,
+        mode: 'Byte',
+        errorCorrectionLevel: 'Q'
+      },
+      // imageOptions: {
+      //   hideBackgroundDots: false,
+      //   imageSize: .8,
+      //   margin: 0,
+      //   crossOrigin: 'anonymous',
+      // },
+      dotsOptions: {
+        color: '#000000',
+        // gradient: {
+        //   type: 'linear', // 'radial'
+        //   rotation: 0,
+        //   colorStops: [{ offset: 0, color: '#8688B2' }, { offset: 1, color: '#77779C' }]
+        // },
+        type: 'dots'
+      },
+      backgroundOptions: {
+        color: "rgba(255, 255, 255, 0%)",
+        // gradient: {
+        //   type: 'linear', // 'radial'
+        //   rotation: 0,
+        //   colorStops: [{ offset: 0, color: '#ededff' }, { offset: 1, color: '#e6e7ff' }]
+        // },
+      },
+      cornersSquareOptions: {
+        color: '#512da8',
+        type: 'square',
+        // gradient: {
+        //   type: 'linear', // 'radial'
+        //   rotation: 180,
+        //   colorStops: [{ offset: 0, color: '#25456e' }, { offset: 1, color: '#4267b2' }]
+        // },
+      },
+      cornersDotOptions: {
+        color: '#000000',
+        type: 'square',
+        // gradient: {
+        //   type: 'linear', // 'radial'
+        //   rotation: 180,
+        //   colorStops: [{ offset: 0, color: '#00266e' }, { offset: 1, color: '#4060b3' }]
+        // },
+      }
+    });
+
     setTimeout(() => {
       this.showCode = true;
-      this.qrCode.append(this.canvasX?.nativeElement);
+      //this.qrCode.append(this.canvasX?.nativeElement);
       const type:string[] = [];
       this.payments$ = this.pay.getAllPayments(mine.uid, 22, type) //.pipe(take(1));
       

@@ -31,7 +31,7 @@
                             
                             <div class="editProduct textC">
 
-                                <div class="formHold">
+                                <div class="formHold" style="padding: 0 16px;">
                                     <form>
     
                                         <mat-form-field appearance="legacy" class="fullWidth">
@@ -342,7 +342,7 @@
                                     </svg></button>
 
 
-                                            <button class="req-excul" mat-button *ngIf="!x.reqBurn && !x.burn" [disabled]="makingChanges" (click)="reqEx(x.id)">Request for exclusive</button>
+                                            <button class="req-excul" mat-button color="primary" *ngIf="!x.reqBurn && !x.burn" [disabled]="makingChanges" (click)="reqEx(x.id)">Request for exclusive</button>
 
                                         </div>
                                     </div>

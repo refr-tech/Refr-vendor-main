@@ -148,7 +148,7 @@ export class NewCampaignComponent implements OnInit, AfterViewInit {
     }
   }
   
-  createStoreCampaign(tX:string){
+  createStoreCampaign(tX:string, kind:boolean){
     console.log(this.storeCamp)
     //this.submitFirst = true;
     this.disableForm = true;
@@ -218,11 +218,13 @@ export class NewCampaignComponent implements OnInit, AfterViewInit {
       }
       this.disableForm = false;
     }else{
-      this.addNewCampaign(tX);
+        this.addNewCampaign(tX, kind);
+
+
     }
   }
 
-  addNewCampaign(tX:string){
+  addNewCampaign(tX:string, kind:boolean){
     console.log(tX)
     if( tX == "t1" || tX == "t2" || tX == "t3" || tX == "t4" || tX == "tC" && (this.payCustom && this.payCustom >= 1)){
       this.auth.addNewCampaign(tX, this.storeCamp, (this.payCustom || 0)).then(res => {
@@ -233,8 +235,12 @@ export class NewCampaignComponent implements OnInit, AfterViewInit {
           //this.auth.resource.router.navigate(["/store/fund-wallet/" + res.id]);
           ///this.auth.resource.router.navigate(["/wallet/" + res.id]);
         }else{
+          if(!kind){
           this.auth.resource.router.navigate(["/store/fund-wallet/" + res.id]);
           // go to next route (create campaign)
+          }else{
+            this.dialogRef.close()
+          }
         }
       }).catch(err => {
         console.log(err)

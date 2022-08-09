@@ -5,7 +5,7 @@ export interface User {
     name: string; display:string; 
     phone: string; iso: string; coin:string;
     email: string; emailV:boolean; emails:string[];
-    soIG:string; soYT:string; soTW:string; soWA:string;
+    soFB: string; soIG:string; soYT:string; soTW:string; soWA:string;
     storeLoc:string[] | FieldValue; storeCam:string[] | FieldValue;
     acBalC:number; acBalCr:number; acBalP:number;
     acBalV:number; acBalVr:number; acBalH:number;

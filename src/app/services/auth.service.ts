@@ -74,7 +74,7 @@ export class AuthService {
     //AuthSettings()
     //appVerificationDisabledForTesting(true) //= true;
     this.windowRef = this.win.windowRef;
-  this.windowRef.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {'size': 'invisible'}, this.afAuth);
+    this.windowRef.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {'size': 'invisible'}, this.afAuth);
     
     // new RecaptchaVerifier(/*'sign-in-button', {
     //   'size': 'invisible',
@@ -387,7 +387,7 @@ export class AuthService {
       phone: phone, iso: iso, coin: coin,
       email: email, emailV:emailV, emails:[],
       
-      soIG:"", soYT:"", soTW:"", soWA:"",
+      soFB:"", soIG:"", soYT:"", soTW:"", soWA:"",
       storeLoc:[], storeCam:[],
       sin: newTimestamp, upd: newTimestamp, log: newTimestamp,
       ban:false, note:[{info:"Hi " + name + " welcome to " + this.resource.env.brand, by: this.resource.env.brand, sin:Date.now(), URL:''}],
@@ -827,6 +827,7 @@ async signOut() {
 async updateUserBio(
   uid:string,
   nameCu:string, name:string, 
+  soFB:string, 
   soIG:string, soYT:string, soTW:string, soWA:string
   //username:string, info:string, url:string, typ:number, sex:number, stat:string 
   ){
@@ -850,7 +851,7 @@ if(nameCu !== name){
   const userRef = doc(this.firestore, `${this.resource.env.db.users}`, `${uid}`);
   return updateDoc(userRef, { 
     //name:name, 
-    soIG, soYT, soTW, soWA,
+    soFB, soIG, soYT, soTW, soWA,
     //info:info, url:url, typ:typ, sex:sex, stat:stat, 
     upd: newTimestamp 
   });
@@ -858,6 +859,25 @@ if(nameCu !== name){
 
 }
 
+
+
+changeTimeData(id:string, schedule:any){
+  const newTimestamp = this.getServerTimestamp();
+  const userRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${id}`);
+  return updateDoc(userRef, { 
+   schedule:schedule, 
+    upd: newTimestamp });
+}
+
+async updateStoreOrdr(
+  id:string, typeORDER:any
+  ){
+  const newTimestamp = this.getServerTimestamp();
+     const userRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${id}`);
+     return updateDoc(userRef, { 
+      typeORDER:typeORDER, 
+       upd: newTimestamp });
+}
 
 clearNotifications(){
   const newTimestamp = this.getServerTimestamp();
@@ -1115,8 +1135,12 @@ addNewCampaign(tX:string, data:any, payCustom:number){
   return addDoc(hypeRefC, dataSend).then(ref => {
     console.log("DONE", ref.id)
 
+    const cB = ( data.type == "flat" ? data.cbNew: data.max);
     const userRef = doc(this.firestore, `${this.resource.env.db.users}`, `${data.by}`);
-    return updateDoc(userRef, {storeCam: arrayUnion(ref.id), cashback: data.cbNew }).then(() => {
+    const shopRef = doc(this.firestore, `${this.resource.env.db.shops}`, `${data.sid}`);
+
+    return updateDoc(userRef, {storeCam: arrayUnion(ref.id), cashback: cB }).then(() => {
+    return updateDoc(shopRef, { cashback: cB }).then(() => {
       console.log("DONE2")
 
       const hypeRef = doc(this.firestore, `${this.resource.env.db.hypes}`, `${ref.id}`);
@@ -1126,6 +1150,8 @@ addNewCampaign(tX:string, data:any, payCustom:number){
       }).catch(err => {// HANDLE ISSUE
         console.log("DONE3", err)
         return err;
+      })
+
       })
     }).catch(err => {// HANDLE ISSUE
       console.log("DONE1", err)
@@ -1137,6 +1163,12 @@ addNewCampaign(tX:string, data:any, payCustom:number){
 getCampaignByID(id: string){
   const catDataC = collection(this.firestore, `${this.resource.env.db.hypes}`)
   const qu = query(catDataC, where("id", "==", id));
+  return collectionData( qu );
+}
+
+getMyCampaignListByUID(uid: string){
+  const catDataC = collection(this.firestore, `${this.resource.env.db.hypes}`)
+  const qu = query(catDataC, where("by", "==", uid), orderBy("sin", "desc") );
   return collectionData( qu );
 }
 
@@ -1242,6 +1274,29 @@ cloudUpload(idX:string, base64String:string){
     console.log('Uploaded a base64 string! Fail', err);
     return { success:false,  url: ""}
   });
+}
+
+async checkContacts(phone:string){
+  let email = (phone.length == 10 ? "+91" : "") + phone + "@" + "refr.club";
+  const fetchSignMethodEmail = await fetchSignInMethodsForEmail( this.afAuth, email );
+    console.log("MARD", fetchSignMethodEmail)
+  if(fetchSignMethodEmail?.length > 0){// USER PHONE@EMAIL.com EXIST 
+    //WORK NEEDED
+      return {"success":true, exist:true}
+  }else{// NO SUCH USER > SIGN UP GO STEP 1
+      return {"success":true, exist:false}
+  }
+}
+
+async getContacts(uid:string){
+  const userRef = doc(this.firestore, `${this.resource.env.db.contacts}`, `${uid}`);
+  return getDoc(userRef);
+}
+
+async updateContacts(uid:string, list:any[]){
+  const newTimestamp = this.getServerTimestamp();
+  const userRef = doc(this.firestore, `${this.resource.env.db.contacts}`, `${uid}`);
+  return updateDoc(userRef, { uid:uid, list: list, upd: newTimestamp });
 }
 
 /*
